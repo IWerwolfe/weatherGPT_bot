@@ -21,6 +21,7 @@ public class TelegramBotConfiguration {
         try {
             botsApi = new TelegramBotsApi(DefaultBotSession.class);
             botsApi.registerBot(weatherBot);
+            log.info("Telegram bot {} launched", "");
         } catch (TelegramApiException e) {
             log.error("Error occurred while sending message to telegram!", e);
         }

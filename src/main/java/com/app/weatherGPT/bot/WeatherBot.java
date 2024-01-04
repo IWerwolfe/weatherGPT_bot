@@ -1,7 +1,7 @@
 package com.app.weatherGPT.bot;
 
+import com.app.weatherGPT.config.Telegram;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.extensions.bots.commandbot.TelegramLongPollingCommandBot;
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.IBotCommand;
@@ -16,15 +16,15 @@ import java.util.List;
 public class WeatherBot extends TelegramLongPollingCommandBot {
 
     private final String botUsername;
+    private final Telegram telegram;
 
     public WeatherBot(
-            @Value("${telegram.bot.token}") String botToken,
-            @Value("${telegram.bot.username}") String botUsername,
-            List<IBotCommand> commandList
-    ) {
+            List<IBotCommand> commandList,
+            Telegram telegram) {
 
-        super(botToken);
-        this.botUsername = botUsername;
+        super(telegram.getBot().getToken());
+        this.telegram = telegram;
+        this.botUsername = telegram.getBot().getUsername();
 
         commandList.forEach(this::register);
     }
@@ -40,11 +40,11 @@ public class WeatherBot extends TelegramLongPollingCommandBot {
         String text = """
                 Я не умею общаться в свободном стиле, лучше отправь мне команду из этого списка:
                                 
-                - /get_weather - получить текущий прогноз
-                - /subscribe_day - подписаться на ежедневную рассылку
-                - /subscribe_week - подписаться на еженедельную рассылку
-                - /get_subscription - информация о подписке
-                - /unsubscribe - отменить подписку
+                /get_weather - получить текущий прогноз
+                /subscribe_day - подписаться на ежедневную рассылку
+                /subscribe_week - подписаться на еженедельную рассылку
+                /get_subscription - информация о подписке
+                /unsubscribe - отменить подписку
                 """;
 
         Long userId = update.getMessage().getChatId();
