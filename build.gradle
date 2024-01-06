@@ -7,6 +7,7 @@ plugins {
 }
 
 apply plugin: 'java'
+apply plugin: 'idea'
 
 jar {
     manifest {
@@ -39,6 +40,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-logging'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web:3.1.5'
     implementation "org.telegram:telegrambots:$telegrambotsVersion"
     implementation "org.telegram:telegrambotsextensions:$telegrambotsVersion"
 
@@ -48,9 +50,9 @@ dependencies {
     implementation group: 'javax.xml.bind', name: 'jaxb-api', version: jaxbApiVersion
     implementation group: 'com.microsoft.sqlserver', name: 'mssql-jdbc', version: '11.2.3.jre17'
     implementation group: 'org.springframework', name: 'spring-orm', version: springOrmVersion
+    implementation 'org.projectlombok:lombok:1.18.26'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
 }
 
 tasks.named('test') {

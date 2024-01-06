@@ -53,6 +53,7 @@ public class WeatherBot extends TelegramLongPollingCommandBot {
         sendMessage.setText(text);
         sendMessage.setChatId(userId);
 
-        Sender.sendMessage(this, sendMessage, "nonCommand");
+        Sender sender = new Sender();
+        sender.sendMessage(this, sendMessage, "nonCommand");
     }
 }
