@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.extensions.bots.commandbot.TelegramLongPollingCommandBot;
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.IBotCommand;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.List;
@@ -17,14 +16,16 @@ public class WeatherBot extends TelegramLongPollingCommandBot {
 
     private final String botUsername;
     private final Telegram telegram;
+    private final Sender sender;
 
     public WeatherBot(
             List<IBotCommand> commandList,
-            Telegram telegram) {
+            Telegram telegram, Sender sender) {
 
         super(telegram.getBot().getToken());
         this.telegram = telegram;
         this.botUsername = telegram.getBot().getUsername();
+        this.sender = sender;
 
         commandList.forEach(this::register);
     }
@@ -48,12 +49,6 @@ public class WeatherBot extends TelegramLongPollingCommandBot {
                 """;
 
         Long userId = update.getMessage().getChatId();
-
-        SendMessage sendMessage = new SendMessage();
-        sendMessage.setText(text);
-        sendMessage.setChatId(userId);
-
-        Sender sender = new Sender();
-        sender.sendMessage(this, sendMessage, "nonCommand");
+        sender.sendBotMessage(this, text, userId);
     }
 }
