@@ -51,6 +51,7 @@ dependencies {
     implementation group: 'com.microsoft.sqlserver', name: 'mssql-jdbc', version: '11.2.3.jre17'
     implementation group: 'org.springframework', name: 'spring-orm', version: springOrmVersion
     implementation 'org.projectlombok:lombok:1.18.26'
+    implementation 'ru.textanalysis.tfwwt:jmorfsdk:2.10.10'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

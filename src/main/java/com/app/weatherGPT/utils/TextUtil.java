@@ -1,8 +1,13 @@
 package com.app.weatherGPT.utils;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Slf4j
+@Component
 public class TextUtil {
 
     public String shortenText(String text, int size) {

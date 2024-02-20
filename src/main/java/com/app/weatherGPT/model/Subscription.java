@@ -24,6 +24,7 @@ public class Subscription {
     @ManyToOne
     @JoinColumn(name = "city_id")
     private City city;
+    @Enumerated(EnumType.STRING)
     private Frequency frequency;
     private LocalDateTime lastSend;
 

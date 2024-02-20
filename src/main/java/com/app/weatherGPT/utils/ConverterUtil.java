@@ -2,8 +2,13 @@ package com.app.weatherGPT.utils;    /*
  *created by WerWolfe on ConverterUtil
  */
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+
 import java.text.DecimalFormat;
 
+@Slf4j
+@Component
 public class ConverterUtil {
 
     private static final double kmPerHourToMetersPerSec = 0.27778;

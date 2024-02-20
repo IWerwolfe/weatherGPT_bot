@@ -21,8 +21,10 @@ public class BotUser {
     @Column(name = "user_name")
     private String userName;
     private String phone;
+    @Enumerated(EnumType.STRING)
     private Gender gender;
     @Column(name = "lang_code")
+    @Enumerated(EnumType.STRING)
     private Lang language_code;
     @Column(name = "last_name")
     private String lastName;
@@ -40,6 +42,7 @@ public class BotUser {
     @JoinColumn(name = "city_id")
     private City city;
     @Column(name = "bot_mode")
+    @Enumerated(EnumType.STRING)
     private BotMode botMode;
 
 }
