@@ -3,11 +3,9 @@ package com.app.weatherGPT.service;    /*
  */
 
 import com.app.weatherGPT.client.WeatherClient;
-import com.app.weatherGPT.dto.api.weather.CardinalDirection;
-import com.app.weatherGPT.dto.api.weather.Condition;
-import com.app.weatherGPT.dto.api.weather.CurrentWeather;
-import com.app.weatherGPT.dto.api.weather.WeatherResponse;
+import com.app.weatherGPT.dto.api.weather.*;
 import com.app.weatherGPT.utils.ConverterUtil;
+import com.app.weatherGPT.utils.TextUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,6 +16,7 @@ import org.springframework.stereotype.Service;
 public class WeatherService {
 
     private final WeatherClient weatherClient;
+    private final TextUtil textUtil;
 
     public String getDescriptorCurrentWeather() {
 
@@ -32,77 +31,78 @@ public class WeatherService {
 
     public String toTextDescription(WeatherResponse weatherResponse) {
 
-        StringBuilder descriptor = new StringBuilder();
         CurrentWeather current = weatherResponse.getCurrent();
         Condition condition = current.getCondition();
 
-        descriptor.append("Текущая погода в ")
-                .append(weatherResponse.getLocation().getName())
-                .append(System.lineSeparator())
-                .append(System.lineSeparator())
-                .append("темп. ")
-                .append(current.getTemp_c())
-                .append(" °C, ")
-                .append(condition.getText())
-                .append(System.lineSeparator());
+        String city = weatherResponse.getLocation().getName();
+        String temp = String.valueOf(current.getTemp_c());
+        String description = condition.getText();
+        String wind = addInfoAboutWind(current);
+        String humidity = getDescriptorHumidity(current.getHumidity());
+        String uv = getDescriptorUVIndex(current.getUv());
 
-        addInfoAboutWind(descriptor, current);
-        descriptor.append(System.lineSeparator());
-        descriptor.append(getDescriptorHumidity(current.getHumidity()));
-        descriptor.append(System.lineSeparator());
-        descriptor.append("Ультрафиолетовое излучение: ")
-                .append(getDescriptorUVIndex(current.getUv()));
+        String pattern = """
+                Текущая погода в %s
+                                
+                темп. %s, %s
+                %s
+                %s
+                Ультрафиолетовое излучение: %s""";
 
-        return descriptor.toString();
+        return String.format(pattern, city, temp, description, wind, humidity, uv);
     }
 
     public String getDescriptorUVIndex(double uvIndex) {
 
         if (uvIndex <= 2) {
-            return "Низкое";
+            return UVIndex.LOW.getLabel();
         }
         if (uvIndex <= 5) {
-            return "Умеренное";
+            return UVIndex.MEDIUM.getLabel();
         }
         if (uvIndex <= 7) {
-            return "Высокое";
+            return UVIndex.HIGH.getLabel();
         }
         if (uvIndex <= 10) {
-            return "Очень высокое";
+            return UVIndex.VERY_HIGH.getLabel();
         }
-        return "Экстремальное";
+        return UVIndex.EXTREME.getLabel();
     }
 
-    private String getDescriptorHumidity(int Humidity) {
-        if (Humidity <= 30) {
-            return "Очень сухой воздух";
+    private String getDescriptorHumidity(int humidity) {
+        if (humidity <= 30) {
+            return Humidity.LOW.getLabel();
         }
-        if (Humidity <= 60) {
-            return "Нормальная влажность";
+        if (humidity <= 60) {
+            return Humidity.MEDIUM.getLabel();
         }
-        if (Humidity <= 75) {
-            return "Повышенная влажность";
+        if (humidity <= 75) {
+            return Humidity.HIGH.getLabel();
         }
-        return "Очень высокая влажность";
+        return Humidity.VERY_HIGH.getLabel();
     }
 
-    private void addInfoAboutWind(StringBuilder descriptor, CurrentWeather current) {
+    private String addInfoAboutWind(CurrentWeather current) {
 
         double wildSpeed = ConverterUtil.convertKmPerHourToMetersPerSecond(current.getWind_kph());
-        if (wildSpeed >= 1) {
-            descriptor.append("Ветер ")
-                    .append(getDescriptorWindDirection(current.getWind_dir()))
-                    .append(", до ")
-                    .append(ConverterUtil.formatToString(wildSpeed, "0.0"))
-                    .append(" м\\с");
+        double gustSpeed = ConverterUtil.convertKmPerHourToMetersPerSecond(current.getGust_kph());
+
+        if (wildSpeed <= 1) {
+            return "Безветренно";
         }
 
-        double gustSpeed = ConverterUtil.convertKmPerHourToMetersPerSecond(current.getGust_kph());
+        String pattern = "";
+        String windDirection = textUtil.getFormWords(getDescriptorWindDirection(current.getWind_dir()));
+        String wildSpeedString = ConverterUtil.formatToString(wildSpeed, "0.0");
+
         if (gustSpeed >= 1) {
-            descriptor.append(" с порывами до ")
-                    .append(ConverterUtil.formatToString(gustSpeed, "0.0"))
-                    .append(" м\\с");
+            pattern = "%s ветер до %s м/с, с порывами до %s  м/с";
+            String gustSpeedString = ConverterUtil.formatToString(gustSpeed, "0.0");
+            return String.format(pattern, windDirection, wildSpeedString, gustSpeedString);
         }
+
+        pattern = "%s ветер до %s м/с";
+        return String.format(pattern, windDirection, wildSpeedString);
     }
 
     private String getDescriptorWindDirection(String windDirection) {

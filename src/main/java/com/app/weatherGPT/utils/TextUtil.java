@@ -10,6 +10,8 @@ import java.util.regex.Pattern;
 @Component
 public class TextUtil {
 
+//    private JMorfSdk jMorfSdk = JMorfSdkFactory.loadFullLibrary();
+
     public String shortenText(String text, int size) {
 
         if (text == null || text.isEmpty()) {
@@ -56,5 +58,26 @@ public class TextUtil {
         }
 
         return str;
+    }
+
+    public String getFormWords(String word) {
+
+        switch (word) {
+            case "Север":
+                return "Северный";
+            case "Юг":
+                return "Южный";
+//            case "Запад" : return "Западный";
+//            case "Восток" : return "Восточный";
+            default: {
+                if (word.endsWith("осток")) {
+                    return word.replaceAll("осток", "осточный");
+                }
+                if (word.endsWith("апад")) {
+                    return word.replaceAll("апад", "ападный");
+                }
+            }
+        }
+        return word;
     }
 }
