@@ -30,9 +30,7 @@ Supported commands:
 
 ## Development
 
-This project is in development. If you like the idea, you can support the project:    
-2200700837611796 - MIR    
-4276700017613559 - SBER
+This project is in development.
 
 - Language: Java 17
 - Used: Spring boot, Spring Framework, telegram bot API, Lombok, postgree, GPT
