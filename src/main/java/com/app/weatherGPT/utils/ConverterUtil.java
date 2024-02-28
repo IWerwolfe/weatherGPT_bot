@@ -41,4 +41,16 @@ public class ConverterUtil {
     private static boolean isCorrectNumb(String value) {
         return value != null && !value.isEmpty() && value.matches(regexNumber);
     }
+
+    public static <T extends Enum<T>> T convertToEnum(String value, Class<T> enumClass) {
+        if (value == null || value.isEmpty()) {
+            return null;
+        }
+        try {
+            return Enum.valueOf(enumClass, value.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            log.error("Invalid enum value: {}", value);
+            return null;
+        }
+    }
 }

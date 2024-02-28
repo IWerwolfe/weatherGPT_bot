@@ -5,19 +5,24 @@ package com.app.weatherGPT.model;    /*
 import com.app.weatherGPT.dto.BotMode;
 import com.app.weatherGPT.dto.Gender;
 import com.app.weatherGPT.dto.Lang;
+import com.app.weatherGPT.utils.ConverterUtil;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.BeanUtils;
+import org.telegram.telegrambots.meta.api.objects.User;
 
 @Data
 @Entity
-@NoArgsConstructor
+//@NoArgsConstructor
 @Table(name = "bot_users")
 public class BotUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @Column(name = "telegram_id")
+    private Long telegramId;
     @Column(name = "user_name")
     private String userName;
     private String phone;
@@ -45,4 +50,18 @@ public class BotUser {
     @Enumerated(EnumType.STRING)
     private BotMode botMode;
 
+    public BotUser() {
+        this.isValid = true;
+        this.botMode = BotMode.NORMAL;
+        this.language_code = Lang.RU;
+        this.userName = "No name bot user " + id;
+        this.isGroup = false;
+    }
+
+    public BotUser(User user) {
+        this();
+        BeanUtils.copyProperties(user, this);
+        this.telegramId = user.getId();
+        this.language_code = ConverterUtil.convertToEnum(user.getLanguageCode().toUpperCase(), Lang.class);
+    }
 }
