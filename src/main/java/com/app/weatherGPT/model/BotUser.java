@@ -8,11 +8,13 @@ import com.app.weatherGPT.dto.Lang;
 import com.app.weatherGPT.utils.ConverterUtil;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.BeanUtils;
 import org.telegram.telegrambots.meta.api.objects.User;
 
-@Data
+@Getter
+@Setter
 @Entity
 //@NoArgsConstructor
 @Table(name = "bot_users")

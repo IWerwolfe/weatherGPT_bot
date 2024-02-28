@@ -1,0 +1,119 @@
+2024-02-28 17:49:03 [main] INFO  com.app.weatherGPT.WeatherGPTBotApp - Starting WeatherGPTBotApp using Java 17.0.9 with PID 8352 (E:\JavaProject\weatherGPT_bot\build\classes\java\main started by Игорь in E:\JavaProject\weatherGPT_bot)
+2024-02-28 17:49:03 [main] INFO  com.app.weatherGPT.WeatherGPTBotApp - No active profile set, falling back to 1 default profile: "default"
+2024-02-28 17:49:04 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-02-28 17:49:04 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 88 ms. Found 1 JPA repository interfaces.
+2024-02-28 17:49:05 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8980 (http)
+2024-02-28 17:49:05 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2024-02-28 17:49:05 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.15]
+2024-02-28 17:49:06 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2024-02-28 17:49:06 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 3106 ms
+2024-02-28 17:49:07 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-02-28 17:49:07 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2024-02-28 17:49:07 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection ConnectionID:1 ClientConnectionId: 875db7c4-51f8-4392-834d-c8bd4b29dcae
+2024-02-28 17:49:07 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2024-02-28 17:49:10 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-02-28 17:49:10 [main] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2024-02-28 17:49:11 [main] INFO  c.a.w.c.TelegramBotConfiguration - Telegram bot  launched
+2024-02-28 17:49:11 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-02-28 17:49:12 [main] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerAdapter - ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2024-02-28 17:49:12 [main] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - 2 mappings in 'requestMappingHandlerMapping'
+2024-02-28 17:49:12 [main] DEBUG o.s.w.s.h.SimpleUrlHandlerMapping - Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2024-02-28 17:49:12 [main] DEBUG o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - ControllerAdvice beans: 0 @ExceptionHandler, 1 ResponseBodyAdvice
+2024-02-28 17:49:12 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8980 (http) with context path ''
+2024-02-28 17:49:12 [main] INFO  com.app.weatherGPT.WeatherGPTBotApp - Started WeatherGPTBotApp in 10.19 seconds (process running for 11.156)
+2024-02-28 17:49:15 [new1KUsersBot Telegram Executor] DEBUG o.s.web.client.RestTemplate - HTTP GET http://api.weatherapi.com/v1/current.json?key=ad2a2951d9334d8490980824240601&q=50.550,137.007&lang=ru
+2024-02-28 17:49:15 [new1KUsersBot Telegram Executor] DEBUG o.s.web.client.RestTemplate - Accept=[application/octet-stream, application/json, application/*+json, */*]
+2024-02-28 17:49:15 [new1KUsersBot Telegram Executor] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2024-02-28 17:49:15 [new1KUsersBot Telegram Executor] DEBUG o.s.web.client.RestTemplate - Reading to [[B] as "application/json"
+2024-02-28 17:49:15 [new1KUsersBot Telegram Executor] INFO  c.app.weatherGPT.client.ClientHttp - the user's request was executed for 655 ms
+2024-02-28 17:51:05 [new1KUsersBot Telegram Executor] WARN  com.app.weatherGPT.bot.WeatherBot - У пользователя с id: 2129557551 изменился статус на kicked
+2024-02-28 17:51:26 [new1KUsersBot Telegram Executor] WARN  com.app.weatherGPT.bot.WeatherBot - У пользователя с id: 2129557551 изменился статус на member
+2024-02-28 17:51:26 [new1KUsersBot Telegram Executor] DEBUG o.s.web.client.RestTemplate - HTTP GET http://api.weatherapi.com/v1/current.json?key=ad2a2951d9334d8490980824240601&q=50.550,137.007&lang=ru
+2024-02-28 17:51:26 [new1KUsersBot Telegram Executor] DEBUG o.s.web.client.RestTemplate - Accept=[application/octet-stream, application/json, application/*+json, */*]
+2024-02-28 17:51:27 [new1KUsersBot Telegram Executor] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2024-02-28 17:51:27 [new1KUsersBot Telegram Executor] DEBUG o.s.web.client.RestTemplate - Reading to [[B] as "application/json"
+2024-02-28 17:51:27 [new1KUsersBot Telegram Executor] INFO  c.app.weatherGPT.client.ClientHttp - the user's request was executed for 319 ms
+2024-02-28 17:52:14 [new1KUsersBot Telegram Executor] WARN  com.app.weatherGPT.bot.WeatherBot - У пользователя с id: 2129557551 изменился статус на kicked
+2024-02-28 17:52:40 [main] INFO  com.app.weatherGPT.WeatherGPTBotApp - Starting WeatherGPTBotApp using Java 17.0.9 with PID 6320 (E:\JavaProject\weatherGPT_bot\build\classes\java\main started by Игорь in E:\JavaProject\weatherGPT_bot)
+2024-02-28 17:52:40 [main] INFO  com.app.weatherGPT.WeatherGPTBotApp - No active profile set, falling back to 1 default profile: "default"
+2024-02-28 17:52:41 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-02-28 17:52:41 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 97 ms. Found 1 JPA repository interfaces.
+2024-02-28 17:52:42 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8980 (http)
+2024-02-28 17:52:42 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2024-02-28 17:52:42 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.15]
+2024-02-28 17:52:42 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2024-02-28 17:52:42 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2515 ms
+2024-02-28 17:52:43 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-02-28 17:52:44 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2024-02-28 17:52:44 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection ConnectionID:1 ClientConnectionId: ee809cd2-c839-4f7d-a94a-bc6e187a54d2
+2024-02-28 17:52:44 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2024-02-28 17:52:46 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-02-28 17:52:47 [main] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2024-02-28 17:52:48 [main] INFO  c.a.w.c.TelegramBotConfiguration - Telegram bot  launched
+2024-02-28 17:52:48 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-02-28 17:52:48 [main] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerAdapter - ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2024-02-28 17:52:48 [main] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - 2 mappings in 'requestMappingHandlerMapping'
+2024-02-28 17:52:48 [main] DEBUG o.s.w.s.h.SimpleUrlHandlerMapping - Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2024-02-28 17:52:49 [main] DEBUG o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - ControllerAdvice beans: 0 @ExceptionHandler, 1 ResponseBodyAdvice
+2024-02-28 17:52:49 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8980 (http) with context path ''
+2024-02-28 17:52:49 [main] INFO  com.app.weatherGPT.WeatherGPTBotApp - Started WeatherGPTBotApp in 9.818 seconds (process running for 11.027)
+2024-02-28 17:53:17 [main] INFO  com.app.weatherGPT.WeatherGPTBotApp - Starting WeatherGPTBotApp using Java 17.0.9 with PID 3476 (E:\JavaProject\weatherGPT_bot\build\classes\java\main started by Игорь in E:\JavaProject\weatherGPT_bot)
+2024-02-28 17:53:17 [main] INFO  com.app.weatherGPT.WeatherGPTBotApp - No active profile set, falling back to 1 default profile: "default"
+2024-02-28 17:53:18 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-02-28 17:53:18 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 96 ms. Found 1 JPA repository interfaces.
+2024-02-28 17:53:19 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8980 (http)
+2024-02-28 17:53:19 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2024-02-28 17:53:19 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.15]
+2024-02-28 17:53:19 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2024-02-28 17:53:19 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2412 ms
+2024-02-28 17:53:21 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-02-28 17:53:21 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2024-02-28 17:53:21 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection ConnectionID:1 ClientConnectionId: b1a16b27-5ee8-4195-a7ab-3594bd5874c3
+2024-02-28 17:53:21 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2024-02-28 17:53:23 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-02-28 17:53:24 [main] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2024-02-28 17:53:25 [main] INFO  c.a.w.c.TelegramBotConfiguration - Telegram bot  launched
+2024-02-28 17:53:25 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-02-28 17:53:25 [main] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerAdapter - ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2024-02-28 17:53:26 [main] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - 2 mappings in 'requestMappingHandlerMapping'
+2024-02-28 17:53:26 [main] DEBUG o.s.w.s.h.SimpleUrlHandlerMapping - Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2024-02-28 17:53:26 [main] DEBUG o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - ControllerAdvice beans: 0 @ExceptionHandler, 1 ResponseBodyAdvice
+2024-02-28 17:53:26 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8980 (http) with context path ''
+2024-02-28 17:53:26 [main] INFO  com.app.weatherGPT.WeatherGPTBotApp - Started WeatherGPTBotApp in 9.971 seconds (process running for 10.869)
+2024-02-28 17:53:26 [new1KUsersBot Telegram Executor] DEBUG o.s.web.client.RestTemplate - HTTP GET http://api.weatherapi.com/v1/current.json?key=ad2a2951d9334d8490980824240601&q=50.550,137.007&lang=ru
+2024-02-28 17:53:26 [new1KUsersBot Telegram Executor] DEBUG o.s.web.client.RestTemplate - Accept=[application/octet-stream, application/json, application/*+json, */*]
+2024-02-28 17:53:27 [new1KUsersBot Telegram Executor] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2024-02-28 17:53:27 [new1KUsersBot Telegram Executor] DEBUG o.s.web.client.RestTemplate - Reading to [[B] as "application/json"
+2024-02-28 17:53:27 [new1KUsersBot Telegram Executor] INFO  c.app.weatherGPT.client.ClientHttp - the user's request was executed for 508 ms
+2024-02-28 17:53:27 [new1KUsersBot Telegram Executor] ERROR com.app.weatherGPT.bot.Sender - Error executing org.telegram.telegrambots.meta.api.methods.send.SendMessage query: [403] Forbidden: bot was blocked by the user
+2024-02-28 17:58:17 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=4m55s715ms914µs739ns).
+2024-02-28 17:58:17 [new1KUsersBot Telegram Executor] WARN  com.app.weatherGPT.bot.WeatherBot - У пользователя с id: 2129557551 изменился статус на kicked
+2024-02-28 18:01:13 [main] INFO  com.app.weatherGPT.WeatherGPTBotApp - Starting WeatherGPTBotApp using Java 17.0.9 with PID 5312 (E:\JavaProject\weatherGPT_bot\build\classes\java\main started by Игорь in E:\JavaProject\weatherGPT_bot)
+2024-02-28 18:01:13 [main] INFO  com.app.weatherGPT.WeatherGPTBotApp - No active profile set, falling back to 1 default profile: "default"
+2024-02-28 18:01:15 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-02-28 18:01:15 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 112 ms. Found 1 JPA repository interfaces.
+2024-02-28 18:01:16 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8980 (http)
+2024-02-28 18:01:16 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2024-02-28 18:01:16 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.15]
+2024-02-28 18:01:16 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2024-02-28 18:01:16 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 3146 ms
+2024-02-28 18:01:18 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-02-28 18:01:18 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2024-02-28 18:01:18 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection ConnectionID:1 ClientConnectionId: a82b13fc-d4c8-4176-bf23-c2959c9bd421
+2024-02-28 18:01:18 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2024-02-28 18:01:21 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-02-28 18:01:21 [main] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2024-02-28 18:01:23 [main] INFO  c.a.w.c.TelegramBotConfiguration - Telegram bot  launched
+2024-02-28 18:01:23 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-02-28 18:01:23 [main] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerAdapter - ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2024-02-28 18:01:23 [main] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - 2 mappings in 'requestMappingHandlerMapping'
+2024-02-28 18:01:23 [main] DEBUG o.s.w.s.h.SimpleUrlHandlerMapping - Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2024-02-28 18:01:23 [main] DEBUG o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - ControllerAdvice beans: 0 @ExceptionHandler, 1 ResponseBodyAdvice
+2024-02-28 18:01:23 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8980 (http) with context path ''
+2024-02-28 18:01:23 [main] INFO  com.app.weatherGPT.WeatherGPTBotApp - Started WeatherGPTBotApp in 11.322 seconds (process running for 12.256)
+2024-02-28 18:01:41 [new1KUsersBot Telegram Executor] WARN  com.app.weatherGPT.bot.WeatherBot - У пользователя с id: 786260965 изменился статус на member
+2024-02-28 18:01:41 [new1KUsersBot Telegram Executor] DEBUG o.s.web.client.RestTemplate - HTTP GET http://api.weatherapi.com/v1/current.json?key=ad2a2951d9334d8490980824240601&q=50.550,137.007&lang=ru
+2024-02-28 18:01:41 [new1KUsersBot Telegram Executor] DEBUG o.s.web.client.RestTemplate - Accept=[application/octet-stream, application/json, application/*+json, */*]
+2024-02-28 18:01:42 [new1KUsersBot Telegram Executor] DEBUG o.s.web.client.RestTemplate - Response 200 OK
+2024-02-28 18:01:42 [new1KUsersBot Telegram Executor] DEBUG o.s.web.client.RestTemplate - Reading to [[B] as "application/json"
+2024-02-28 18:01:42 [new1KUsersBot Telegram Executor] INFO  c.app.weatherGPT.client.ClientHttp - the user's request was executed for 1147 ms

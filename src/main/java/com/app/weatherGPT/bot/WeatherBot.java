@@ -3,7 +3,6 @@ package com.app.weatherGPT.bot;
 import com.app.weatherGPT.config.Telegram;
 import com.app.weatherGPT.model.BotUser;
 import com.app.weatherGPT.repositories.BotUserRepository;
-import jakarta.persistence.criteria.From;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.extensions.bots.commandbot.TelegramLongPollingCommandBot;
