@@ -1,8 +1,5 @@
 package com.app.weatherGPT.bot.command;
 
-import com.app.weatherGPT.bot.Sender;
-import com.app.weatherGPT.bot.WeatherBot;
-import com.app.weatherGPT.service.WeatherService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -13,25 +10,20 @@ import org.telegram.telegrambots.meta.bots.AbsSender;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class StartCommand implements IBotCommand {
-
-    private final WeatherService weatherService;
-    private final Sender sender;
+public class GetSubscriptionCommand implements IBotCommand {
 
     @Override
     public String getCommandIdentifier() {
-        return "start";
+        return "get_subscription";
     }
 
     @Override
     public String getDescription() {
-        return "Перезапустить бота / обновить данные";
+        return "Информация о подписке";
     }
 
     @Override
     public void processMessage(AbsSender absSender, Message message, String[] arguments) {
 
-        String text = weatherService.getDescriptorCurrentWeather();
-        sender.sendBotMessage((WeatherBot) absSender, text, message.getChatId());
     }
 }
