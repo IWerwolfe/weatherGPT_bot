@@ -22,4 +22,7 @@ public class LastActivity {
     private BotUser user;
     private LocalDateTime date;
 
+    public LastActivity(BotUser user) {
+        this.user = user;
+    }
 }

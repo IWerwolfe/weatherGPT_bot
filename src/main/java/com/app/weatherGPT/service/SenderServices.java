@@ -1,7 +1,8 @@
-package com.app.weatherGPT.bot;    /*
- *created by WerWolfe on Sender
+package com.app.weatherGPT.service;    /*
+ *created by WerWolfe on SenderServices
  */
 
+import com.app.weatherGPT.bot.WeatherBot;
 import com.app.weatherGPT.utils.TextUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +19,7 @@ import java.io.Serializable;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class Sender {
+public class SenderServices {
 
     private final TextUtil textUtil;
 

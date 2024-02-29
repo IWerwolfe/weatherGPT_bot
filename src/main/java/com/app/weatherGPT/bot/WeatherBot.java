@@ -2,13 +2,13 @@ package com.app.weatherGPT.bot;
 
 import com.app.weatherGPT.config.Telegram;
 import com.app.weatherGPT.model.BotUser;
-import com.app.weatherGPT.repositories.BotUserRepository;
+import com.app.weatherGPT.service.BotUserServices;
+import com.app.weatherGPT.service.SenderServices;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.extensions.bots.commandbot.TelegramLongPollingCommandBot;
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.IBotCommand;
-import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.User;
+import org.telegram.telegrambots.meta.api.objects.*;
 
 import java.util.Collection;
 import java.util.List;
@@ -17,24 +17,24 @@ import java.util.List;
 @Service
 @Slf4j
 public class WeatherBot extends TelegramLongPollingCommandBot {
-    private final BotUserRepository botUserRepository;
+
     private final String botUsername;
     private final Telegram telegram;
-    private final Sender sender;
+    private final SenderServices senderServices;
+    private final BotUserServices botUserServices;
 
     private BotUser botUser;
 
     public WeatherBot(
             List<IBotCommand> commandList,
-            Telegram telegram, Sender sender,
-            BotUserRepository botUserRepository) {
+            Telegram telegram, SenderServices senderServices, BotUserServices botUserServices) {
 
         super(telegram.getBot().getToken());
 
         this.telegram = telegram;
         this.botUsername = telegram.getBot().getUsername();
-        this.sender = sender;
-        this.botUserRepository = botUserRepository;
+        this.senderServices = senderServices;
+        this.botUserServices = botUserServices;
 
         commandList.forEach(this::register);
     }
@@ -47,12 +47,17 @@ public class WeatherBot extends TelegramLongPollingCommandBot {
     @Override
     public void processNonCommandUpdate(Update update) {
 
-        User user = getUserFromUpdate(update);
-        botUser = getBotUser(user);
-
         if (update.hasMyChatMember()) {
-            handlerMyChatMember(update);
+            handlerMyChatMember(update.getChatMember());
             return;
+        }
+
+        if (update.hasMessage()) {
+            if (update.getMessage().hasLocation()) {
+                handlerLocation(update.getMessage());
+                return;
+            }
+
         }
 
         String text = """
@@ -63,28 +68,21 @@ public class WeatherBot extends TelegramLongPollingCommandBot {
         text = String.format(text, getCommandsDescriptor());
         Long userId = update.getMessage().getChatId();
 
-        sender.sendBotMessage(this, text, userId);
+        senderServices.sendBotMessage(this, text, userId);
     }
 
-    private void handlerMyChatMember(Update update) {
+    private void handlerLocation(Message message) {
 
-        Boolean isPrivate = update.getMyChatMember().getChat().isUserChat();
-        String newStatus = update.getMyChatMember().getNewChatMember().getStatus();
-        updateBotUserStatus(newStatus, isPrivate);
+        double latitude = message.getLocation().getLatitude();
+        double longitude = message.getLocation().getLongitude();
+        botUserServices.updateLocation(message.getFrom(), latitude, longitude);
     }
 
-    private void updateBotUserStatus(String newStatus, boolean isPrivate) {
+    private void handlerMyChatMember(ChatMemberUpdated memberUpdated) {
 
-        String text;
-
-        if (botUser == null) {
-            text = String.format("Ошибка при изменении статуса %s, не удалось определить пользователя", newStatus);
-        } else {
-            botUser.setIsValid(!newStatus.equals("kicked") && isPrivate);
-            botUserRepository.save(botUser);
-            text = String.format("У пользователя с id: %s изменился статус на %s", botUser.getId(), newStatus);
-        }
-        log.warn(text);
+        Boolean isPrivate = memberUpdated.getChat().isUserChat();
+        String newStatus = memberUpdated.getNewChatMember().getStatus();
+        botUserServices.updateBotUserStatus(newStatus, isPrivate, memberUpdated.getFrom());
     }
 
     private User getUserFromUpdate(Update update) {
@@ -103,17 +101,6 @@ public class WeatherBot extends TelegramLongPollingCommandBot {
         }
 
         return null;
-    }
-
-    private BotUser getBotUser(User user) {
-
-        if (user == null) {
-            return null;
-        }
-
-        return botUserRepository
-                .findByTelegramId(user.getId())
-                .orElse(new BotUser(user));
     }
 
     private String getCommandsDescriptor() {

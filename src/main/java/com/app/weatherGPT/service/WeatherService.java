@@ -4,6 +4,7 @@ package com.app.weatherGPT.service;    /*
 
 import com.app.weatherGPT.client.WeatherClient;
 import com.app.weatherGPT.dto.api.weather.*;
+import com.app.weatherGPT.model.BotUser;
 import com.app.weatherGPT.utils.ConverterUtil;
 import com.app.weatherGPT.utils.TextUtil;
 import lombok.RequiredArgsConstructor;
@@ -18,9 +19,9 @@ public class WeatherService {
     private final WeatherClient weatherClient;
     private final TextUtil textUtil;
 
-    public String getDescriptorCurrentWeather() {
+    public String getDescriptorCurrentWeather(BotUser botUser) {
 
-        WeatherResponse weather = weatherClient.getCurrentWeather();
+        WeatherResponse weather = weatherClient.getCurrentWeather(botUser);
 
         if (weather == null) {
             return "The weather forecast could not be obtained.";
@@ -36,7 +37,7 @@ public class WeatherService {
 
         String city = weatherResponse.getLocation().getName();
         String temp = String.valueOf(current.getTemp_c());
-        String description = condition.getText();
+        String description = condition.getText().toLowerCase();
         String wind = addInfoAboutWind(current);
         String humidity = getDescriptorHumidity(current.getHumidity());
         String uv = getDescriptorUVIndex(current.getUv());
@@ -44,7 +45,7 @@ public class WeatherService {
         String pattern = """
                 Текущая погода в %s
                                 
-                темп. %s, %s
+                темп. %s °C, %s
                 %s
                 %s
                 Ультрафиолетовое излучение: %s""";
@@ -91,18 +92,17 @@ public class WeatherService {
             return "Безветренно";
         }
 
-        String pattern = "";
+        String pattern = "%s ветер до %s м/с";
         String windDirection = textUtil.getFormWords(getDescriptorWindDirection(current.getWind_dir()));
         String wildSpeedString = ConverterUtil.formatToString(wildSpeed, "0.0");
 
-        if (gustSpeed >= 1) {
-            pattern = "%s ветер до %s м/с, с порывами до %s  м/с";
-            String gustSpeedString = ConverterUtil.formatToString(gustSpeed, "0.0");
-            return String.format(pattern, windDirection, wildSpeedString, gustSpeedString);
+        if (gustSpeed < 1) {
+            return String.format(pattern, windDirection, wildSpeedString);
         }
 
-        pattern = "%s ветер до %s м/с";
-        return String.format(pattern, windDirection, wildSpeedString);
+        pattern = pattern + System.lineSeparator() + "с порывами до %s м/с";
+        String gustSpeedString = ConverterUtil.formatToString(gustSpeed, "0.0");
+        return String.format(pattern, windDirection, wildSpeedString, gustSpeedString);
     }
 
     private String getDescriptorWindDirection(String windDirection) {
@@ -119,7 +119,7 @@ public class WeatherService {
                     windDirection
             );
             log.error(e.getMessage());
-            return "безветренно";
+            return "ветренно";
         }
     }
 }
