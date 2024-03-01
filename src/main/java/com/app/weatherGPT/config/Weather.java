@@ -13,7 +13,10 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "weather")
 public class Weather {
 
-    private String url;
+    private String urlCurrent;
+    private String urlSearch;
+    private String urlForecast;
+    private String urlAstrology;
     private String token;
     private String lang;
 }

@@ -21,4 +21,5 @@ public class Location implements Serializable {
     private String tz_id;
     private long localtime_epoch;
     private String localtime;
+    private String url;
 }

@@ -3,6 +3,7 @@ package com.app.weatherGPT.client;    /*
  */
 
 import com.app.weatherGPT.config.Weather;
+import com.app.weatherGPT.dto.api.weather.SearchResponse;
 import com.app.weatherGPT.dto.api.weather.WeatherResponse;
 import com.app.weatherGPT.model.BotUser;
 import com.app.weatherGPT.model.UserLocation;
@@ -21,12 +22,27 @@ public class WeatherClient extends ClientHttp {
     private BotUser botUser;
 
     @Override
-    public String getUrl() {
+    public String getUrl() {;
+        return url;
+    }
+
+    public String getUrlCurrentWeather() {
         StringBuilder builder = new StringBuilder();
-        builder.append(weather.getUrl())
+        builder.append(weather.getUrlCurrent())
                 .append("?key=")
                 .append(weather.getToken())
                 .append(getLocation())
+                .append("&lang=")
+                .append(getLang());
+        return builder.toString();
+    }
+
+    public String getUrlSearch(String query) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(weather.getUrlSearch())
+                .append("?key=")
+                .append(weather.getToken())
+                .append(query)
                 .append("&lang=")
                 .append(getLang());
         return builder.toString();
@@ -39,7 +55,12 @@ public class WeatherClient extends ClientHttp {
 
     public WeatherResponse getCurrentWeather(BotUser botUser) {
         this.botUser = botUser;
-        return executeGetRequest(WeatherResponse.class, getUrl());
+        return executeGetRequest(WeatherResponse.class, getUrlCurrentWeather());
+    }
+
+    public SearchResponse getCurrentSearchLocation(double latitude, double longitude) {
+        String query = getLocation(latitude, longitude);
+        return executeGetRequest(SearchResponse.class, getUrlSearch(query));
     }
 
     private String getLang() {
@@ -54,12 +75,16 @@ public class WeatherClient extends ClientHttp {
         UserLocation location = is ? UserLocation.getDefaultLocation() : botUser.getLocation();
 
         if (location.getCity() == null) {
-            return String.format("&q=%s,%s", location.getLatitude(), location.getLongitude());
+            return getLocation(location.getLatitude(), location.getLongitude());
         }
 
         if (location.getLatitude() == null || location.getLongitude() == null) {
-            return String.format("&q=%s,%s", 0, 0);
+            return getLocation(0, 0);
         }
         return String.format("&q=%s", location.getCityName());
+    }
+
+    private String getLocation(double latitude, double longitude) {
+        return String.format("&q=%s,%s", latitude, longitude);
     }
 }

@@ -4,6 +4,7 @@ import com.app.weatherGPT.config.Telegram;
 import com.app.weatherGPT.model.BotUser;
 import com.app.weatherGPT.service.BotUserServices;
 import com.app.weatherGPT.service.SenderServices;
+import com.app.weatherGPT.service.WeatherService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.extensions.bots.commandbot.TelegramLongPollingCommandBot;
@@ -22,12 +23,13 @@ public class WeatherBot extends TelegramLongPollingCommandBot {
     private final Telegram telegram;
     private final SenderServices senderServices;
     private final BotUserServices botUserServices;
+    private final WeatherService weatherService;
 
     private BotUser botUser;
 
     public WeatherBot(
             List<IBotCommand> commandList,
-            Telegram telegram, SenderServices senderServices, BotUserServices botUserServices) {
+            Telegram telegram, SenderServices senderServices, BotUserServices botUserServices, WeatherService weatherService) {
 
         super(telegram.getBot().getToken());
 
@@ -35,6 +37,7 @@ public class WeatherBot extends TelegramLongPollingCommandBot {
         this.botUsername = telegram.getBot().getUsername();
         this.senderServices = senderServices;
         this.botUserServices = botUserServices;
+        this.weatherService = weatherService;
 
         commandList.forEach(this::register);
     }

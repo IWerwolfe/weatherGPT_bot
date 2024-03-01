@@ -1,7 +1,4 @@
-package com.app.weatherGPT.model;    /*
- *created by WerWolfe on
- */
-
+package com.app.weatherGPT.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -9,18 +6,15 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Entity
-@Table(name = "cities")
+@Table(name = "regions")
 @NoArgsConstructor
-public class City {
+public class Region {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
     @ManyToOne
-    @JoinColumn(name = "region_id")
-    private Region region;
-    @Column(name = "post_code")
-    private String postCode;
-
+    @JoinColumn(name = "country_id")
+    private Country country;
 }
