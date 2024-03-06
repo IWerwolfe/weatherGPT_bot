@@ -1,4 +1,4 @@
-package com.app.weatherGPT.model;    /*
+package com.app.weatherGPT.model.location;    /*
  *created by WerWolfe on
  */
 
@@ -23,4 +23,8 @@ public class City {
     @Column(name = "post_code")
     private String postCode;
 
+    public City(String name, Region region) {
+        this.name = name;
+        this.region = region;
+    }
 }

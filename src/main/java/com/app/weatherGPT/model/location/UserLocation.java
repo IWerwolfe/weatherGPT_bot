@@ -1,4 +1,4 @@
-package com.app.weatherGPT.model;
+package com.app.weatherGPT.model.location;
 
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.JoinColumn;

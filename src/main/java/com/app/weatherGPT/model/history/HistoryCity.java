@@ -3,7 +3,7 @@ package com.app.weatherGPT.model.history;    /*
  */
 
 
-import com.app.weatherGPT.model.City;
+import com.app.weatherGPT.model.location.City;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;

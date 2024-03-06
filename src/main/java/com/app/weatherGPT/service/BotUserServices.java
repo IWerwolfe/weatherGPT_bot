@@ -1,7 +1,7 @@
 package com.app.weatherGPT.service;
 
 import com.app.weatherGPT.model.BotUser;
-import com.app.weatherGPT.model.UserLocation;
+import com.app.weatherGPT.model.location.UserLocation;
 import com.app.weatherGPT.repositories.BotUserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

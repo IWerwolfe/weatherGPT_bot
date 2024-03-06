@@ -1,4 +1,4 @@
-package com.app.weatherGPT.model;
+package com.app.weatherGPT.model.location;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -14,4 +14,8 @@ public class Country {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
+
+    public Country(String name) {
+        this.name = name;
+    }
 }

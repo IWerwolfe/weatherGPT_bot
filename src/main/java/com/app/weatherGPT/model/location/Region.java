@@ -1,4 +1,4 @@
-package com.app.weatherGPT.model;
+package com.app.weatherGPT.model.location;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -17,4 +17,9 @@ public class Region {
     @ManyToOne
     @JoinColumn(name = "country_id")
     private Country country;
+
+    public Region(String name, Country country) {
+        this.name = name;
+        this.country = country;
+    }
 }

@@ -5,6 +5,7 @@ package com.app.weatherGPT.model;    /*
 import com.app.weatherGPT.dto.BotMode;
 import com.app.weatherGPT.dto.Gender;
 import com.app.weatherGPT.dto.Lang;
+import com.app.weatherGPT.model.location.UserLocation;
 import com.app.weatherGPT.utils.ConverterUtil;
 import jakarta.persistence.*;
 import lombok.Getter;

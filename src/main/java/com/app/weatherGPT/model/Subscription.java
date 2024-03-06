@@ -3,6 +3,7 @@ package com.app.weatherGPT.model;    /*
  */
 
 import com.app.weatherGPT.dto.Frequency;
+import com.app.weatherGPT.model.location.City;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
