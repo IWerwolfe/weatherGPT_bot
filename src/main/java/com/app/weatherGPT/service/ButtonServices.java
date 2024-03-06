@@ -1,5 +1,6 @@
 package com.app.weatherGPT.service;
 
+import com.app.weatherGPT.model.location.UserLocation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -9,6 +10,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -23,6 +25,20 @@ public class ButtonServices {
 
     static {
         LOCATION.setRequestLocation(true);
+    }
+
+    public InlineKeyboardMarkup getInlineCityKeyboard(List<UserLocation> locationList, long userId) {
+
+        List<List<InlineKeyboardButton>> buttonList = new ArrayList<>();
+
+        for (UserLocation location : locationList) {
+            if (location == null) {
+                continue;
+            }
+            String command = "L%" + location.getCity().getId() + "%U" + userId;
+            buttonList.add(getInlineKeyboardButton(command, location.getCityName()));
+        }
+        return createInlineKeyboardMarkup(buttonList);
     }
 
     public ReplyKeyboardMarkup keyboardMarkupCommands() {
@@ -62,7 +78,7 @@ public class ButtonServices {
         return code.replaceAll(REGEX, " ").replaceAll("\s{2,}", " ").trim();
     }
 
-    private InlineKeyboardMarkup getInlineKeyboardMarkup(List<List<InlineKeyboardButton>> rows) {
+    private InlineKeyboardMarkup createInlineKeyboardMarkup(List<List<InlineKeyboardButton>> rows) {
         InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
         markupInline.setKeyboard(rows);
         return markupInline;

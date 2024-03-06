@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,9 +29,11 @@ public class LocationServices {
     private final WeatherClient weatherClient;
 
     public List<UserLocation> searchLocation(double latitude, double longitude) {
-        SearchResponse response = weatherClient.getCurrentSearchLocation(latitude, longitude);
 
-        return null;
+        SearchResponse response = weatherClient.getCurrentSearchLocation(latitude, longitude);
+        return response == null ?
+                new ArrayList<>() :
+                convertToUserLocation(response.getLocations());
     }
 
     private List<UserLocation> convertToUserLocation(List<Location> locationList) {
@@ -43,10 +46,7 @@ public class LocationServices {
 
     private UserLocation convertToUserLocation(Location location) {
 
-        Country country = convertToCountry(location.getCountry());
-        Region region = convertToRegion(location.getRegion(), country);
-        City city = convertToCity(location.getName(), region);
-
+        City city = convertToCity(location);
         UserLocation userLocation = new UserLocation(city);
         userLocation.setLongitude(location.getLon());
         userLocation.setLatitude(location.getLat());
@@ -68,32 +68,40 @@ public class LocationServices {
         return optional.get();
     }
 
-    private Region convertToRegion(String regionName, Country country) {
+    private City convertToCity(Location location) {
 
-        if (regionName == null || regionName.isEmpty()) {
+        if (location.getName() == null || location.getName().isEmpty()) {
             return null;
         }
 
-        Optional<Region> optional = regionRepository.findByNameIgnoreCaseAndCountry(regionName, country);
-        if (optional.isEmpty()) {
-            Region region = new Region(regionName, country);
-            return regionRepository.save(region);
+        List<City> cityList = cityRepository.findByNameIgnoreCase(location.getName());
+        for (City city : cityList) {
+            if (city.getRegion().getName().equalsIgnoreCase(location.getRegion())) {
+                return city;
+            }
         }
-        return optional.get();
+
+        Region region = convertToRegion(location);
+        City city = new City(location.getName(), region);
+        return cityRepository.save(city);
     }
 
-    private City convertToCity(String cityName, Region region) {
+    private Region convertToRegion(Location location) {
 
-        if (cityName == null || cityName.isEmpty()) {
+        if (location.getRegion() == null || location.getRegion().isEmpty()) {
             return null;
         }
 
-        Optional<City> optional = cityRepository.findByNameIgnoreCaseAndRegion(cityName, region);
-        if (optional.isEmpty()) {
-            City city = new City(cityName, region);
-            return cityRepository.save(city);
+        List<Region> regionList = regionRepository.findByNameIgnoreCase(location.getRegion());
+        for (Region region : regionList) {
+            if (region.getCountry().getName().equalsIgnoreCase(location.getCountry())) {
+                return region;
+            }
         }
-        return optional.get();
+
+        Country country = convertToCountry(location.getCountry());
+        Region region = new Region(location.getRegion(), country);
+        return regionRepository.save(region);
     }
 
 

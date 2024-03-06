@@ -12,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -60,6 +62,7 @@ public class WeatherClient extends ClientHttp {
 
     public SearchResponse getCurrentSearchLocation(double latitude, double longitude) {
         String query = getLocation(latitude, longitude);
+        ArrayList<String> result = executeGetRequest(ArrayList.class, getUrlSearch(query)); //TODO HTTP возвращает массив
         return executeGetRequest(SearchResponse.class, getUrlSearch(query));
     }
 

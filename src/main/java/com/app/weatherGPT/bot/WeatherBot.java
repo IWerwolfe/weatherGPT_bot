@@ -2,14 +2,17 @@ package com.app.weatherGPT.bot;
 
 import com.app.weatherGPT.config.Telegram;
 import com.app.weatherGPT.model.BotUser;
-import com.app.weatherGPT.service.BotUserServices;
-import com.app.weatherGPT.service.SenderServices;
-import com.app.weatherGPT.service.WeatherService;
+import com.app.weatherGPT.model.location.UserLocation;
+import com.app.weatherGPT.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.extensions.bots.commandbot.TelegramLongPollingCommandBot;
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.IBotCommand;
-import org.telegram.telegrambots.meta.api.objects.*;
+import org.telegram.telegrambots.meta.api.objects.ChatMemberUpdated;
+import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.User;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 
 import java.util.Collection;
 import java.util.List;
@@ -24,12 +27,14 @@ public class WeatherBot extends TelegramLongPollingCommandBot {
     private final SenderServices senderServices;
     private final BotUserServices botUserServices;
     private final WeatherService weatherService;
+    private final LocationServices locationServices;
+    private final ButtonServices buttonServices;
 
     private BotUser botUser;
 
     public WeatherBot(
             List<IBotCommand> commandList,
-            Telegram telegram, SenderServices senderServices, BotUserServices botUserServices, WeatherService weatherService) {
+            Telegram telegram, SenderServices senderServices, BotUserServices botUserServices, WeatherService weatherService, LocationServices locationServices, ButtonServices buttonServices) {
 
         super(telegram.getBot().getToken());
 
@@ -38,6 +43,8 @@ public class WeatherBot extends TelegramLongPollingCommandBot {
         this.senderServices = senderServices;
         this.botUserServices = botUserServices;
         this.weatherService = weatherService;
+        this.locationServices = locationServices;
+        this.buttonServices = buttonServices;
 
         commandList.forEach(this::register);
     }
@@ -78,7 +85,32 @@ public class WeatherBot extends TelegramLongPollingCommandBot {
 
         double latitude = message.getLocation().getLatitude();
         double longitude = message.getLocation().getLongitude();
-        botUserServices.updateLocation(message.getFrom(), latitude, longitude);
+        String text;
+        long chatId = message.getChatId();
+
+        List<UserLocation> location = locationServices.searchLocation(latitude, longitude);
+
+        if (location.isEmpty()) {
+            text = "К сожалению не удалось определить ваше местоположение";
+            senderServices.sendBotMessage(this, text, chatId);
+            return;
+        }
+
+        if (location.size() == 1) {
+            if (location.get(0) == null) {
+                text = "К сожалению не удалось определить город, в котором вы находитесь, мы установили положение по координатам";
+                botUserServices.updateLocation(message.getFrom(), latitude, longitude);
+            } else {
+                text = "Установлен город " + location.get(0).getCityName();
+                botUserServices.updateLocation(message.getFrom(), location.get(0));
+            }
+            senderServices.sendBotMessage(this, text, chatId);
+            return;
+        }
+
+        InlineKeyboardMarkup keyboard = buttonServices.getInlineCityKeyboard(location, message.getFrom().getId());
+        text = "Мы нашли несколько городов с этими координатами, выберите нужный из них";
+        senderServices.sendBotMessage(this, text, keyboard, chatId);
     }
 
     private void handlerMyChatMember(ChatMemberUpdated memberUpdated) {

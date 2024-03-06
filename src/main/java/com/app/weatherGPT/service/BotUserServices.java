@@ -65,4 +65,10 @@ public class BotUserServices {
         this.user.setLocation(location);
         userRepository.save(this.user);
     }
+
+    public void updateLocation(User user, UserLocation location) {
+        getUser(user);
+        this.user.setLocation(location);
+        userRepository.save(this.user);
+    }
 }
