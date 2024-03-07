@@ -2,7 +2,6 @@ package com.app.weatherGPT.service;
 
 import com.app.weatherGPT.client.WeatherClient;
 import com.app.weatherGPT.dto.api.weather.Location;
-import com.app.weatherGPT.dto.api.weather.SearchResponse;
 import com.app.weatherGPT.model.location.City;
 import com.app.weatherGPT.model.location.Country;
 import com.app.weatherGPT.model.location.Region;
@@ -15,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,22 +25,21 @@ public class LocationServices {
     private final CityRepository cityRepository;
     private final RegionRepository regionRepository;
     private final CountryRepository countryRepository;
-
     private final WeatherClient weatherClient;
 
-    public List<UserLocation> searchLocation(double latitude, double longitude) {
+    public List<City> searchLocation(double latitude, double longitude) {
 
-        SearchResponse response = weatherClient.getCurrentSearchLocation(latitude, longitude);
+        Location[] response = weatherClient.getCurrentSearchLocation(latitude, longitude);
         return response == null ?
                 new ArrayList<>() :
-                convertToUserLocation(response.getLocations());
+                convertToUserLocation(response);
     }
 
-    private List<UserLocation> convertToUserLocation(List<Location> locationList) {
+    private List<City> convertToUserLocation(Location[] locationList) {
 
-        return locationList
-                .stream()
-                .map(this::convertToUserLocation)
+        return Arrays
+                .stream(locationList)
+                .map(this::convertToCity)
                 .toList();
     }
 
@@ -103,6 +102,4 @@ public class LocationServices {
         Region region = new Region(location.getRegion(), country);
         return regionRepository.save(region);
     }
-
-
 }

@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @NoArgsConstructor
-@Table(name = "bot_users")
+@Table(name = "command_cache")
 public class UserCommandCache {
 
     @Id

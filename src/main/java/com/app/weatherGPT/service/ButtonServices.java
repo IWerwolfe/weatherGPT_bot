@@ -1,6 +1,6 @@
 package com.app.weatherGPT.service;
 
-import com.app.weatherGPT.model.location.UserLocation;
+import com.app.weatherGPT.model.location.City;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -27,16 +27,16 @@ public class ButtonServices {
         LOCATION.setRequestLocation(true);
     }
 
-    public InlineKeyboardMarkup getInlineCityKeyboard(List<UserLocation> locationList, long userId) {
+    public InlineKeyboardMarkup getInlineCityKeyboard(List<City> cityList) {
 
         List<List<InlineKeyboardButton>> buttonList = new ArrayList<>();
 
-        for (UserLocation location : locationList) {
-            if (location == null) {
+        for (City city : cityList) {
+            if (city == null) {
                 continue;
             }
-            String command = "L%" + location.getCity().getId() + "%U" + userId;
-            buttonList.add(getInlineKeyboardButton(command, location.getCityName()));
+            String command = "city%" + city.getId();
+            buttonList.add(getInlineKeyboardButton(city.getName(), command));
         }
         return createInlineKeyboardMarkup(buttonList);
     }

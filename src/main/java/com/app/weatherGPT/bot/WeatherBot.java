@@ -2,25 +2,27 @@ package com.app.weatherGPT.bot;
 
 import com.app.weatherGPT.config.Telegram;
 import com.app.weatherGPT.model.BotUser;
+import com.app.weatherGPT.model.location.City;
 import com.app.weatherGPT.model.location.UserLocation;
+import com.app.weatherGPT.repositories.CityRepository;
 import com.app.weatherGPT.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.extensions.bots.commandbot.TelegramLongPollingCommandBot;
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.IBotCommand;
-import org.telegram.telegrambots.meta.api.objects.ChatMemberUpdated;
-import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.User;
+import org.telegram.telegrambots.meta.api.objects.*;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
 @Slf4j
 public class WeatherBot extends TelegramLongPollingCommandBot {
+
+    private final CityRepository cityRepository;
 
     private final String botUsername;
     private final Telegram telegram;
@@ -34,7 +36,13 @@ public class WeatherBot extends TelegramLongPollingCommandBot {
 
     public WeatherBot(
             List<IBotCommand> commandList,
-            Telegram telegram, SenderServices senderServices, BotUserServices botUserServices, WeatherService weatherService, LocationServices locationServices, ButtonServices buttonServices) {
+            Telegram telegram,
+            SenderServices senderServices,
+            BotUserServices botUserServices,
+            WeatherService weatherService,
+            LocationServices locationServices,
+            ButtonServices buttonServices,
+            CityRepository cityRepository) {
 
         super(telegram.getBot().getToken());
 
@@ -47,6 +55,7 @@ public class WeatherBot extends TelegramLongPollingCommandBot {
         this.buttonServices = buttonServices;
 
         commandList.forEach(this::register);
+        this.cityRepository = cityRepository;
     }
 
     @Override
@@ -67,7 +76,11 @@ public class WeatherBot extends TelegramLongPollingCommandBot {
                 handlerLocation(update.getMessage());
                 return;
             }
+        }
 
+        if (update.hasCallbackQuery()) {
+            handlerCallbackQuery(update);
+            return;
         }
 
         String text = """
@@ -81,36 +94,75 @@ public class WeatherBot extends TelegramLongPollingCommandBot {
         senderServices.sendBotMessage(this, text, userId);
     }
 
+    private void handlerCallbackQuery(Update update) {
+
+        CallbackQuery query = update.getCallbackQuery();
+
+        String data = query.getData();
+        String[] param = data.split("%");
+        String text;
+
+        if (param.length < 2) {
+            text = "Произошла при обработке команды";
+            senderServices.sendBotEditMessage(this, text, query.getMessage().getChatId(), query.getMessage().getMessageId());
+            return;
+        }
+
+        switch (param[0]) {
+            case "city" -> setLocationByCity(query, param[1]);
+            default -> {
+                text = "Неизвестная команда";
+                senderServices.sendBotEditMessage(this, text, query.getMessage().getChatId(), query.getMessage().getMessageId());
+            }
+        }
+    }
+
+    private void setLocationByCity(CallbackQuery query, String cityId) {
+
+        String text;
+        Optional<City> optional = cityRepository.findById(Long.valueOf(cityId));
+
+        if (optional.isEmpty()) {
+            text = "Произошла при обработке команды";
+            log.error("Город с id {} не найден", cityId );
+        } else {
+            User user = query.getFrom();
+            botUserServices.updateLocation(user, optional.get());
+            text = "Установлен город " + optional.get().getName();
+        }
+
+        senderServices.sendBotEditMessage(this, text, query.getMessage().getChatId(), query.getMessage().getMessageId());
+    }
+
     private void handlerLocation(Message message) {
 
         double latitude = message.getLocation().getLatitude();
         double longitude = message.getLocation().getLongitude();
+
+        InlineKeyboardMarkup keyboard = null;
         String text;
-        long chatId = message.getChatId();
 
-        List<UserLocation> location = locationServices.searchLocation(latitude, longitude);
+        List<City> cityList = locationServices.searchLocation(latitude, longitude);
 
-        if (location.isEmpty()) {
-            text = "К сожалению не удалось определить ваше местоположение";
-            senderServices.sendBotMessage(this, text, chatId);
-            return;
-        }
+        switch (cityList.size()) {
+            case 0 -> text = "К сожалению не удалось определить ваше местоположение";
+            case 1 -> {
+                City city = cityList.get(0);
+                UserLocation location = new UserLocation(city);
+                location.setLatitude(latitude);
+                location.setLongitude(longitude);
+                botUserServices.updateLocation(message.getFrom(), location);
 
-        if (location.size() == 1) {
-            if (location.get(0) == null) {
-                text = "К сожалению не удалось определить город, в котором вы находитесь, мы установили положение по координатам";
-                botUserServices.updateLocation(message.getFrom(), latitude, longitude);
-            } else {
-                text = "Установлен город " + location.get(0).getCityName();
-                botUserServices.updateLocation(message.getFrom(), location.get(0));
+                text = city == null ?
+                        "К сожалению не удалось определить город, в котором вы находитесь, мы установили положение по координатам" :
+                        "Установлен город " + city.getName();
             }
-            senderServices.sendBotMessage(this, text, chatId);
-            return;
+            default -> {
+                keyboard = buttonServices.getInlineCityKeyboard(cityList);
+                text = "Мы нашли несколько городов с этими координатами, выберите нужный из них";
+            }
         }
-
-        InlineKeyboardMarkup keyboard = buttonServices.getInlineCityKeyboard(location, message.getFrom().getId());
-        text = "Мы нашли несколько городов с этими координатами, выберите нужный из них";
-        senderServices.sendBotMessage(this, text, keyboard, chatId);
+        senderServices.sendBotMessage(this, text, keyboard, message.getChatId());
     }
 
     private void handlerMyChatMember(ChatMemberUpdated memberUpdated) {

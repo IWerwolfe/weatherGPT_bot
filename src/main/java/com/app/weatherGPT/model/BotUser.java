@@ -64,7 +64,7 @@ public class BotUser {
 
     public BotUser(User user) {
         this();
-        BeanUtils.copyProperties(user, this);
+        BeanUtils.copyProperties(user, this, "id");
         this.telegramId = user.getId();
         this.language_code = ConverterUtil.convertToEnum(user.getLanguageCode().toUpperCase(), Lang.class);
     }

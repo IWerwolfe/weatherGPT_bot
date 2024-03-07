@@ -1,6 +1,7 @@
 package com.app.weatherGPT.bot.command;
 
 import com.app.weatherGPT.bot.WeatherBot;
+import com.app.weatherGPT.service.BotUserServices;
 import com.app.weatherGPT.service.ButtonServices;
 import com.app.weatherGPT.service.SenderServices;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ public class StartCommand implements IBotCommand {
 
     private final SenderServices senderServices;
     private final ButtonServices buttonServices;
+    private final BotUserServices botUserServices;
 
     @Override
     public String getCommandIdentifier() {
@@ -31,6 +33,8 @@ public class StartCommand implements IBotCommand {
 
     @Override
     public void processMessage(AbsSender absSender, Message message, String[] arguments) {
+
+        botUserServices.updateUser(message.getFrom());
 
         String text = message.getFrom().getUserName() + """
                 , добро пожаловать в бот "WeatherGPT!

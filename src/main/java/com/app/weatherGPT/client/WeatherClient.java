@@ -3,7 +3,7 @@ package com.app.weatherGPT.client;    /*
  */
 
 import com.app.weatherGPT.config.Weather;
-import com.app.weatherGPT.dto.api.weather.SearchResponse;
+import com.app.weatherGPT.dto.api.weather.Location;
 import com.app.weatherGPT.dto.api.weather.WeatherResponse;
 import com.app.weatherGPT.model.BotUser;
 import com.app.weatherGPT.model.location.UserLocation;
@@ -11,8 +11,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 
 @Service
 @Slf4j
@@ -60,10 +58,9 @@ public class WeatherClient extends ClientHttp {
         return executeGetRequest(WeatherResponse.class, getUrlCurrentWeather());
     }
 
-    public SearchResponse getCurrentSearchLocation(double latitude, double longitude) {
+    public Location[] getCurrentSearchLocation(double latitude, double longitude) {
         String query = getLocation(latitude, longitude);
-        ArrayList<String> result = executeGetRequest(ArrayList.class, getUrlSearch(query)); //TODO HTTP возвращает массив
-        return executeGetRequest(SearchResponse.class, getUrlSearch(query));
+        return executeGetRequest(Location[].class, getUrlSearch(query));
     }
 
     private String getLang() {
