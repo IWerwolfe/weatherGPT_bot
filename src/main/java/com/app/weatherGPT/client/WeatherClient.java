@@ -74,14 +74,15 @@ public class WeatherClient extends ClientHttp {
         boolean is = (botUser == null || botUser.getLocation() == null);
         UserLocation location = is ? UserLocation.getDefaultLocation() : botUser.getLocation();
 
-        if (location.getCity() == null) {
+        if (!(location.getLatitude() == null || location.getLongitude() == null)) {
             return getLocation(location.getLatitude(), location.getLongitude());
         }
 
-        if (location.getLatitude() == null || location.getLongitude() == null) {
-            return getLocation(0, 0);
+        if (location.getCity() != null) {
+            return String.format("&q=%s", location.getCityName());
         }
-        return String.format("&q=%s", location.getCityName());
+
+        return getLocation(0, 0);
     }
 
     private String getLocation(double latitude, double longitude) {
