@@ -77,4 +77,13 @@ public class BotUser {
     public void updateLastActivity() {
         lastActivity.setDate(LocalDateTime.now(Clock.systemDefaultZone()));
     }
+
+    public boolean hasLocation() {
+
+        if (this.location == null) {
+            return false;
+        }
+
+        return location.isFilled();
+    }
 }

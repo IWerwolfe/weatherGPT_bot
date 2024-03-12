@@ -35,4 +35,8 @@ public class UserLocation {
     public static UserLocation getDefaultLocation() {
         return new UserLocation(55.7522, 37.6156);
     }
+
+    public boolean isFilled() {
+        return this.city != null || !(this.latitude == null && this.longitude == null);
+    }
 }

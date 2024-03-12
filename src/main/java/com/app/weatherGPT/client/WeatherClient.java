@@ -33,7 +33,8 @@ public class WeatherClient extends ClientHttp {
                 .append(weather.getToken())
                 .append(getLocation())
                 .append("&lang=")
-                .append(getLang());
+                .append(getLang())
+                .append("&aqi=yes");
         return builder.toString();
     }
 

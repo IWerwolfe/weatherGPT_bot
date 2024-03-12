@@ -36,21 +36,31 @@ public class StartCommand implements IBotCommand {
 
         botUserServices.updateUser(message.getFrom());
 
+        ReplyKeyboard keyboard = null;
+        boolean hasLocation = botUserServices
+                .getUser(message.getFrom())
+                .hasLocation();
+
         String text = message.getFrom().getUserName() + """
                 , добро пожаловать в бот "WeatherGPT!
-                
+                                
                 Данный бот предназначен для получения информации о погоде в вашем городе.
-                
+                                
                 Поддерживается разные режимы работы:
                 1. Стандартный режим - вам отправляется обычный прогноз погоды.
                 2. Творческий режим - прогноз погоды формируется нейросетью.
                 3. Нецензурный режим - прогноз погоды содержит нецензурные слова.
-                
-                Для начала работы вам нужно выбрать город.
-                Для этого нажмите на кнопку "Мое местоположение" или введите название города
+                                
                 """;
 
-        ReplyKeyboard keyboard = buttonServices.keyboardMarkupGetLocation();
+        if (!hasLocation) {
+            text = text + """
+                    Для начала работы вам нужно выбрать город.
+                    Для этого нажмите на кнопку "Мое местоположение" или введите название города
+                    """;
+            keyboard = buttonServices.keyboardMarkupGetLocation();
+        }
+
         senderServices.sendBotMessage((WeatherBot) absSender, text, keyboard, message.getChatId());
     }
 }

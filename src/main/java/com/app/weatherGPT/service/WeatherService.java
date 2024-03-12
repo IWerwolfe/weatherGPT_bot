@@ -41,6 +41,7 @@ public class WeatherService {
         String wind = addInfoAboutWind(current);
         String humidity = getDescriptorHumidity(current.getHumidity());
         String uv = getDescriptorUVIndex(current.getUv());
+        String airQ = getDescriptorAirQuality(current.getAir_quality());
 
         String pattern = """
                 Текущая погода в %s
@@ -48,9 +49,10 @@ public class WeatherService {
                 темп. %s °C, %s
                 %s
                 %s
-                Ультрафиолетовое излучение: %s""";
+                Ультрафиолетовое излучение: %s
+                Качество воздуха (US EPA Index): %s""";
 
-        return String.format(pattern, city, temp, description, wind, humidity, uv);
+        return String.format(pattern, city, temp, description, wind, humidity, uv, airQ);
     }
 
     public String getDescriptorUVIndex(double uvIndex) {
@@ -69,6 +71,23 @@ public class WeatherService {
         }
         return UVIndex.EXTREME.getLabel();
     }
+
+    public String getDescriptorAirQuality(AirQuality airQuality) {
+
+        if (airQuality == null) {
+            return "--";
+        }
+
+        return switch (airQuality.getUs_epa_index()) {
+            case 0, 1 -> UsEpaIndex.GOOD.getLabel();
+            case 2 -> UsEpaIndex.MODERATE.getLabel();
+            case 3 -> UsEpaIndex.UNHEALTHY_SENSITIVE.getLabel();
+            case 4 -> UsEpaIndex.UNHEALTHY.getLabel();
+            case 5 -> UsEpaIndex.VERY_UNHEALTHY.getLabel();
+            default -> UsEpaIndex.HAZARDOUS.getLabel();
+        };
+    }
+
 
     private String getDescriptorHumidity(int humidity) {
         if (humidity <= 30) {
