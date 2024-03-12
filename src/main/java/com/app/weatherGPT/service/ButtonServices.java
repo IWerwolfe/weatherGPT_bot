@@ -49,6 +49,15 @@ public class ButtonServices {
         return createReplyKeyboardMarkup(LOCATION, true);
     }
 
+    public InlineKeyboardMarkup getEmptyInlineKeyboardMarkup() {
+        return createInlineKeyboardMarkup(new ArrayList<>());
+    }
+
+    private String convertDescription(String code) {
+        String REGEX = "[^0-9a-zA-Zа-яА-ЯёЁ\\-.,=_*+&:#№@!/(){}\\[\\]]+";
+        return code.replaceAll(REGEX, " ").replaceAll("\s{2,}", " ").trim();
+    }
+
     private ReplyKeyboardMarkup createReplyKeyboardMarkup(KeyboardButton button, boolean oneTimeKeyboard) {
         KeyboardRow row = new KeyboardRow();
         row.add(button);
@@ -71,11 +80,6 @@ public class ButtonServices {
         InlineKeyboardButton taskButton = new InlineKeyboardButton(label);
         taskButton.setCallbackData(command);
         return List.of(taskButton);
-    }
-
-    public String convertDescription(String code) {
-        String REGEX = "[^0-9a-zA-Zа-яА-ЯёЁ\\-.,=_*+&:#№@!/(){}\\[\\]]+";
-        return code.replaceAll(REGEX, " ").replaceAll("\s{2,}", " ").trim();
     }
 
     private InlineKeyboardMarkup createInlineKeyboardMarkup(List<List<InlineKeyboardButton>> rows) {

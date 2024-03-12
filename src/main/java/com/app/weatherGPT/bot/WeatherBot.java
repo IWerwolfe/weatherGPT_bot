@@ -83,6 +83,10 @@ public class WeatherBot extends TelegramLongPollingCommandBot {
             return;
         }
 
+        sendDefaultMessage(update);
+    }
+
+    private void sendDefaultMessage(Update update) {
         String text = """
                 Я не умею общаться в свободном стиле, лучше отправь мне команду из этого списка:
                                 
@@ -139,13 +143,16 @@ public class WeatherBot extends TelegramLongPollingCommandBot {
         double latitude = message.getLocation().getLatitude();
         double longitude = message.getLocation().getLongitude();
 
-        InlineKeyboardMarkup keyboard = null;
+        InlineKeyboardMarkup keyboard = buttonServices.getEmptyInlineKeyboardMarkup();
         String text;
 
         List<City> cityList = locationServices.searchLocation(latitude, longitude);
 
         switch (cityList.size()) {
-            case 0 -> text = "К сожалению не удалось определить ваше местоположение";
+            case 0 -> {
+                botUserServices.updateLocation(message.getFrom(), latitude, longitude);
+                text = "К сожалению не удалось определить город, в котором вы находитесь, мы установили положение по координатам";
+            }
             case 1 -> {
                 City city = cityList.get(0);
                 UserLocation location = new UserLocation(city);
