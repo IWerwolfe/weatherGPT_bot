@@ -3,7 +3,7 @@ package com.app.weatherGPT.client;    /*
  */
 
 import com.app.weatherGPT.config.Weather;
-import com.app.weatherGPT.dto.api.weather.Location;
+import com.app.weatherGPT.dto.api.weather.description.Location;
 import com.app.weatherGPT.dto.api.weather.WeatherResponse;
 import com.app.weatherGPT.model.BotUser;
 import com.app.weatherGPT.model.location.UserLocation;

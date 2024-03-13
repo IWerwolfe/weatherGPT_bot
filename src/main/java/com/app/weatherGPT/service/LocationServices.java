@@ -1,7 +1,7 @@
 package com.app.weatherGPT.service;
 
 import com.app.weatherGPT.client.WeatherClient;
-import com.app.weatherGPT.dto.api.weather.Location;
+import com.app.weatherGPT.dto.api.weather.description.Location;
 import com.app.weatherGPT.model.location.City;
 import com.app.weatherGPT.model.location.Country;
 import com.app.weatherGPT.model.location.Region;

@@ -1,7 +1,9 @@
-package com.app.weatherGPT.dto.api.weather;    /*
+package com.app.weatherGPT.dto.api.weather.period;    /*
  *created by WerWolfe on CurrentWeather
  */
 
+import com.app.weatherGPT.dto.api.weather.description.AirQuality;
+import com.app.weatherGPT.dto.api.weather.description.Condition;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.ToString;

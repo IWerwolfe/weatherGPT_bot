@@ -1,4 +1,4 @@
-package com.app.weatherGPT.dto.api.weather;    /*
+package com.app.weatherGPT.dto.api.weather.enums;    /*
  *created by WerWolfe on Humidity
  */
 

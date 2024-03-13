@@ -1,8 +1,9 @@
-package com.app.weatherGPT.dto.api.weather;    /*
+package com.app.weatherGPT.dto.api.weather.description;    /*
  *created by WerWolfe on AirQuality
  */
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.ToString;
 
@@ -19,6 +20,10 @@ public class AirQuality implements Serializable {
     private float so2;
     private float pm2_5;
     private float pm10;
-    private int us_epa_index;
-    private int gb_defra_index;
+
+    @JsonProperty("us_epa_index")
+    private int usEpaIndex;
+
+    @JsonProperty("gb_defra_index")
+    private int gbDefraIndex;
 }

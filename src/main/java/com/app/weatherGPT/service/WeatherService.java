@@ -4,6 +4,13 @@ package com.app.weatherGPT.service;    /*
 
 import com.app.weatherGPT.client.WeatherClient;
 import com.app.weatherGPT.dto.api.weather.*;
+import com.app.weatherGPT.dto.api.weather.description.AirQuality;
+import com.app.weatherGPT.dto.api.weather.description.Condition;
+import com.app.weatherGPT.dto.api.weather.enums.CardinalDirection;
+import com.app.weatherGPT.dto.api.weather.enums.Humidity;
+import com.app.weatherGPT.dto.api.weather.enums.UVIndex;
+import com.app.weatherGPT.dto.api.weather.enums.UsEpaIndex;
+import com.app.weatherGPT.dto.api.weather.period.CurrentWeather;
 import com.app.weatherGPT.model.BotUser;
 import com.app.weatherGPT.utils.ConverterUtil;
 import com.app.weatherGPT.utils.TextUtil;
@@ -78,7 +85,7 @@ public class WeatherService {
             return "--";
         }
 
-        return switch (airQuality.getUs_epa_index()) {
+        return switch (airQuality.getUsEpaIndex()) {
             case 0, 1 -> UsEpaIndex.GOOD.getLabel();
             case 2 -> UsEpaIndex.MODERATE.getLabel();
             case 3 -> UsEpaIndex.UNHEALTHY_SENSITIVE.getLabel();

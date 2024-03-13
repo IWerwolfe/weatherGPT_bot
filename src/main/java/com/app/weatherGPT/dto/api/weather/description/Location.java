@@ -1,8 +1,9 @@
-package com.app.weatherGPT.dto.api.weather;    /*
+package com.app.weatherGPT.dto.api.weather.description;    /*
  *created by WerWolfe on Location
  */
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.ToString;
 
@@ -18,8 +19,13 @@ public class Location implements Serializable {
     private String country;
     private double lat;
     private double lon;
-    private String tz_id;
-    private long localtime_epoch;
+
+    @JsonProperty("tz_id")
+    private String tzId;
+
+    @JsonProperty("localtime_epoch")
+    private long localtimeEpoch;
+
     private String localtime;
     private String url;
 }
