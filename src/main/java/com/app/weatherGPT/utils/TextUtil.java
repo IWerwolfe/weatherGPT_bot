@@ -1,16 +1,32 @@
 package com.app.weatherGPT.utils;
 
+import jakarta.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Slf4j
 @Component
+@Singleton
 public class TextUtil {
 
-//    private JMorfSdk jMorfSdk = JMorfSdkFactory.loadFullLibrary();
+    private final SimpleDateFormat sdf12 = new SimpleDateFormat("hh:mm a");
+    private final SimpleDateFormat sdf24 = new SimpleDateFormat("HH:mm");
+
+    public String time12In24Format(String time) {
+        try {
+            Date date12 = sdf12.parse(time);
+            return sdf24.format(date12);
+        } catch (ParseException e) {
+            log.error("Error converting time {} to 24 hour format: " + e.getMessage(), time);
+        }
+        return "00:00";
+    }
 
     public String shortenText(String text, int size) {
 
@@ -67,8 +83,6 @@ public class TextUtil {
                 return "Северный";
             case "Юг":
                 return "Южный";
-//            case "Запад" : return "Западный";
-//            case "Восток" : return "Восточный";
             default: {
                 if (word.endsWith("осток")) {
                     return word.replaceAll("осток", "осточный");

@@ -2,7 +2,11 @@ package com.app.weatherGPT.dto.api.weather.enums;    /*
  *created by WerWolfe on Humidity
  */
 
-public enum Humidity {
+import com.app.weatherGPT.dto.EnumDesc;
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
+public enum Humidity implements EnumDesc {
 
     LOW("Очень сухой воздух"),
     MEDIUM("Нормальная влажность"),
@@ -11,11 +15,13 @@ public enum Humidity {
 
     private final String label;
 
-    Humidity(String label) {
-        this.label = label;
+    @Override
+    public String toString() {
+        return getLabel();
     }
 
+    @Override
     public String getLabel() {
-        return label;
+        return this.label;
     }
 }

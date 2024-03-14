@@ -3,14 +3,15 @@ package com.app.weatherGPT.service;    /*
  */
 
 import com.app.weatherGPT.client.WeatherClient;
-import com.app.weatherGPT.dto.api.weather.*;
+import com.app.weatherGPT.dto.api.weather.WeatherResponse;
 import com.app.weatherGPT.dto.api.weather.description.AirQuality;
+import com.app.weatherGPT.dto.api.weather.description.Astro;
 import com.app.weatherGPT.dto.api.weather.description.Condition;
-import com.app.weatherGPT.dto.api.weather.enums.CardinalDirection;
-import com.app.weatherGPT.dto.api.weather.enums.Humidity;
-import com.app.weatherGPT.dto.api.weather.enums.UVIndex;
-import com.app.weatherGPT.dto.api.weather.enums.UsEpaIndex;
+import com.app.weatherGPT.dto.api.weather.enums.*;
 import com.app.weatherGPT.dto.api.weather.period.CurrentWeather;
+import com.app.weatherGPT.dto.api.weather.period.Day;
+import com.app.weatherGPT.dto.api.weather.period.Forecast;
+import com.app.weatherGPT.dto.api.weather.period.ForecastDay;
 import com.app.weatherGPT.model.BotUser;
 import com.app.weatherGPT.utils.ConverterUtil;
 import com.app.weatherGPT.utils.TextUtil;
@@ -26,7 +27,7 @@ public class WeatherService {
     private final WeatherClient weatherClient;
     private final TextUtil textUtil;
 
-    public String getDescriptorCurrentWeather(BotUser botUser) {
+    public String getDescCurrentWeather(BotUser botUser) {
 
         WeatherResponse weather = weatherClient.getCurrentWeather(botUser);
 
@@ -34,21 +35,93 @@ public class WeatherService {
             return "The weather forecast could not be obtained.";
         }
 
-        return toTextDescription(weather);
+        return toTextDescCurrent(weather);
     }
 
-    public String toTextDescription(WeatherResponse weatherResponse) {
+    public String getDescForecast(BotUser botUser, int days) {
+
+        WeatherResponse weather = weatherClient.getForecast(botUser, days);
+
+        if (weather == null) {
+            return "The weather forecast could not be obtained.";
+        }
+
+        return toTextDescForecast(weather);
+    }
+
+    private String toTextDescForecast(WeatherResponse weatherResponse) {
+
+        StringBuilder builder = new StringBuilder();
+        Forecast forecast = weatherResponse.getForecast();
+
+        builder
+                .append("Прогноз погоды в ")
+                .append(weatherResponse.getLocation().getName());
+
+        forecast.getForecastDay().forEach(forecastDay -> builder
+                .append(System.lineSeparator())
+                .append(toTextDescForecastDay(forecastDay))
+                .append("---------------------------------------------------------------"));
+
+        return builder.toString();
+    }
+
+    private String toTextDescForecastDay(ForecastDay forecastDay) {
+
+        Day day = forecastDay.getDay();
+        Condition condition = day.getCondition();
+        Astro astro = forecastDay.getAstro();
+
+        String maxTemp = String.valueOf(day.getMaxTempC());
+        String minTemp = String.valueOf(day.getMinTempC());
+        String avgTemp = String.valueOf(day.getAvgTempC());
+
+        String astroDesc = toTextDescAstro(astro);
+
+        String description = condition.getText().toLowerCase();
+        String wind = toTextDescWind(day.getMaxWindKph());
+
+        String humidity = toTextDescHumidity(day.getAvgHumidity());
+        String uv = toTextDescUVIndex(day.getUv());
+        String airQ = toTextDescAirQuality(forecastDay.getAirQuality());
+
+        String pattern = """
+                
+                %s
+                температура от %s до %s °C
+                %s
+                %s
+                                
+                %s
+                Ультрафиолетовое излучение: %s
+                Качество воздуха (US EPA Index): %s
+                                
+                %s""";
+
+        return String.format(pattern,
+                forecastDay.getDate(),
+                minTemp,
+                maxTemp,
+                description,
+                wind,
+                humidity,
+                uv,
+                airQ,
+                astroDesc);
+    }
+
+    private String toTextDescCurrent(WeatherResponse weatherResponse) {
 
         CurrentWeather current = weatherResponse.getCurrent();
         Condition condition = current.getCondition();
 
         String city = weatherResponse.getLocation().getName();
-        String temp = String.valueOf(current.getTemp_c());
+        String temp = String.valueOf(current.getTempC());
         String description = condition.getText().toLowerCase();
-        String wind = addInfoAboutWind(current);
-        String humidity = getDescriptorHumidity(current.getHumidity());
-        String uv = getDescriptorUVIndex(current.getUv());
-        String airQ = getDescriptorAirQuality(current.getAir_quality());
+        String wind = toTextDescWind(current.getWindKph(), current.getGustKph(), current.getWindDir());
+        String humidity = toTextDescHumidity(current.getHumidity());
+        String uv = toTextDescUVIndex(current.getUv());
+        String airQ = toTextDescAirQuality(current.getAirQuality());
 
         String pattern = """
                 Текущая погода в %s
@@ -56,13 +129,29 @@ public class WeatherService {
                 темп. %s °C, %s
                 %s
                 %s
+                                
                 Ультрафиолетовое излучение: %s
                 Качество воздуха (US EPA Index): %s""";
 
         return String.format(pattern, city, temp, description, wind, humidity, uv, airQ);
     }
 
-    public String getDescriptorUVIndex(double uvIndex) {
+    private String toTextDescAstro(Astro astro) {
+
+        String sunrise = textUtil.time12In24Format(astro.getSunrise());
+        String sunset = textUtil.time12In24Format(astro.getSunset());
+        String moon = ConverterUtil.convertToDescEnum(astro.getMoonPhase(), LunarPhase.class);
+
+        String pattern = """                
+                Рассвет: %s
+                Закат: %s
+                %s
+                """;
+
+        return String.format(pattern, sunrise, sunset, moon);
+    }
+
+    private String toTextDescUVIndex(double uvIndex) {
 
         if (uvIndex <= 2) {
             return UVIndex.LOW.getLabel();
@@ -79,7 +168,7 @@ public class WeatherService {
         return UVIndex.EXTREME.getLabel();
     }
 
-    public String getDescriptorAirQuality(AirQuality airQuality) {
+    private String toTextDescAirQuality(AirQuality airQuality) {
 
         if (airQuality == null) {
             return "--";
@@ -96,7 +185,7 @@ public class WeatherService {
     }
 
 
-    private String getDescriptorHumidity(int humidity) {
+    private String toTextDescHumidity(int humidity) {
         if (humidity <= 30) {
             return Humidity.LOW.getLabel();
         }
@@ -109,17 +198,18 @@ public class WeatherService {
         return Humidity.VERY_HIGH.getLabel();
     }
 
-    private String addInfoAboutWind(CurrentWeather current) {
+    private String toTextDescWind(double windKph, double gustKph, String windDir) {
 
-        double wildSpeed = ConverterUtil.convertKmPerHourToMetersPerSecond(current.getWind_kph());
-        double gustSpeed = ConverterUtil.convertKmPerHourToMetersPerSecond(current.getGust_kph());
+        double wildSpeed = ConverterUtil.convertKmPerHourToMetersPerSecond(windKph);
+        double gustSpeed = ConverterUtil.convertKmPerHourToMetersPerSecond(gustKph);
 
         if (wildSpeed <= 1) {
             return "Безветренно";
         }
 
         String pattern = "%s ветер до %s м/с";
-        String windDirection = textUtil.getFormWords(getDescriptorWindDirection(current.getWind_dir()));
+        String enumDescWind = ConverterUtil.convertToDescEnum(windDir, CardinalDirection.class);
+        String windDirection = textUtil.getFormWords(enumDescWind);
         String wildSpeedString = ConverterUtil.formatToString(wildSpeed, "0.0");
 
         if (gustSpeed < 1) {
@@ -131,21 +221,17 @@ public class WeatherService {
         return String.format(pattern, windDirection, wildSpeedString, gustSpeedString);
     }
 
-    private String getDescriptorWindDirection(String windDirection) {
+    private String toTextDescWind(double windKph) {
 
-        if (windDirection == null || windDirection.isEmpty()) {
-            return "безветренно";
+        double wildSpeed = ConverterUtil.convertKmPerHourToMetersPerSecond(windKph);
+
+        if (wildSpeed <= 1) {
+            return "Безветренно";
         }
 
-        try {
-            return CardinalDirection.valueOf(windDirection).getLabel();
-        } catch (Exception e) {
-            log.error("An error occurred while retrieving the value {} from the enumeration {}.",
-                    CardinalDirection.class.getName(),
-                    windDirection
-            );
-            log.error(e.getMessage());
-            return "ветренно";
-        }
+        String pattern = "Ветер до %s м/с";
+        String wildSpeedString = ConverterUtil.formatToString(wildSpeed, "0.0");
+
+        return String.format(pattern, wildSpeedString);
     }
 }

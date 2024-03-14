@@ -1,6 +1,10 @@
 package com.app.weatherGPT.dto.api.weather.enums;
 
-public enum UsEpaIndex {
+import com.app.weatherGPT.dto.EnumDesc;
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
+public enum UsEpaIndex implements EnumDesc {
 
     GOOD("Хорошее"),
     MODERATE("Умеренное"),
@@ -11,11 +15,13 @@ public enum UsEpaIndex {
 
     private final String label;
 
-    UsEpaIndex(String label) {
-        this.label = label;
+    @Override
+    public String toString() {
+        return getLabel();
     }
 
+    @Override
     public String getLabel() {
-        return label;
+        return this.label;
     }
 }

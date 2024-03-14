@@ -4,6 +4,7 @@ import com.app.weatherGPT.bot.WeatherBot;
 import com.app.weatherGPT.service.BotUserServices;
 import com.app.weatherGPT.service.ButtonServices;
 import com.app.weatherGPT.service.SenderServices;
+import com.app.weatherGPT.service.WeatherService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ public class StartCommand implements IBotCommand {
     private final SenderServices senderServices;
     private final ButtonServices buttonServices;
     private final BotUserServices botUserServices;
+    private final WeatherService weatherService;
 
     @Override
     public String getCommandIdentifier() {
@@ -62,5 +64,8 @@ public class StartCommand implements IBotCommand {
         }
 
         senderServices.sendBotMessage((WeatherBot) absSender, text, keyboard, message.getChatId());
+
+        String desc = weatherService.getDescForecast(botUserServices.getUser(message.getFrom()), 3);
+        senderServices.sendBotMessage((WeatherBot) absSender, desc, message.getChatId());
     }
 }

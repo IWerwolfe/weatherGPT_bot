@@ -2,7 +2,11 @@ package com.app.weatherGPT.dto.api.weather.enums;    /*
  *created by WerWolfe on UVIndex
  */
 
-public enum UVIndex {
+import com.app.weatherGPT.dto.EnumDesc;
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
+public enum UVIndex implements EnumDesc {
 
     LOW("Низкое"),
     MEDIUM("Умеренное"),
@@ -12,12 +16,13 @@ public enum UVIndex {
 
     private final String label;
 
-    UVIndex(String label) {
-        this.label = label;
+    @Override
+    public String toString() {
+        return getLabel();
     }
 
+    @Override
     public String getLabel() {
-        return label;
+        return this.label;
     }
-
 }

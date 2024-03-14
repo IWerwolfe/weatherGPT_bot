@@ -3,11 +3,9 @@ package com.app.weatherGPT.dto;    /*
  */
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 
-@Getter
 @AllArgsConstructor
-public enum Lang {
+public enum Lang implements EnumDesc {
 
     AF("Afrikaans"),
     AM("አማርኛ"),
@@ -141,5 +139,10 @@ public enum Lang {
     @Override
     public String toString() {
         return getLabel();
+    }
+
+    @Override
+    public String getLabel() {
+        return this.label;
     }
 }

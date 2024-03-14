@@ -2,7 +2,11 @@ package com.app.weatherGPT.dto.api.weather.enums;    /*
  *created by WerWolfe on CardinalDirection
  */
 
-public enum CardinalDirection {
+import com.app.weatherGPT.dto.EnumDesc;
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
+public enum CardinalDirection implements EnumDesc {
 
     N("Север"),
     NNE("Северо-северо-восток"),
@@ -23,12 +27,13 @@ public enum CardinalDirection {
 
     private final String label;
 
-    CardinalDirection(String label) {
-        this.label = label;
+    @Override
+    public String toString() {
+        return getLabel();
     }
 
+    @Override
     public String getLabel() {
-        return label;
+        return this.label;
     }
-
 }

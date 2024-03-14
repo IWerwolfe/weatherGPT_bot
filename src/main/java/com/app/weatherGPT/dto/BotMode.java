@@ -3,11 +3,9 @@ package com.app.weatherGPT.dto;    /*
  */
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 
-@Getter
 @AllArgsConstructor
-public enum BotMode {
+public enum BotMode implements EnumDesc {
 
     NORMAL("Обычный"),
     PROFANE("Матерный"),
@@ -18,5 +16,10 @@ public enum BotMode {
     @Override
     public String toString() {
         return getLabel();
+    }
+
+    @Override
+    public String getLabel() {
+        return this.label;
     }
 }

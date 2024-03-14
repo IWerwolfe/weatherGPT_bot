@@ -3,8 +3,8 @@ package com.app.weatherGPT.client;    /*
  */
 
 import com.app.weatherGPT.config.Weather;
-import com.app.weatherGPT.dto.api.weather.description.Location;
 import com.app.weatherGPT.dto.api.weather.WeatherResponse;
+import com.app.weatherGPT.dto.api.weather.description.Location;
 import com.app.weatherGPT.model.BotUser;
 import com.app.weatherGPT.model.location.UserLocation;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ public class WeatherClient extends ClientHttp {
     private BotUser botUser;
 
     @Override
-    public String getUrl() {;
+    public String getUrl() {
         return url;
     }
 
@@ -49,6 +49,21 @@ public class WeatherClient extends ClientHttp {
         return builder.toString();
     }
 
+    public String getUrlForecast(int days) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(weather.getUrlForecast())
+                .append("?key=")
+                .append(weather.getToken())
+                .append(getLocation())
+                .append("&days=")
+                .append(days)
+                .append("&aqi=yes")
+                .append("&alerts=yes")
+                .append("&lang=")
+                .append(getLang());
+        return builder.toString();
+    }
+
     @Override
     public HttpHeaders getHttpHeaders() {
         return new HttpHeaders();
@@ -57,6 +72,11 @@ public class WeatherClient extends ClientHttp {
     public WeatherResponse getCurrentWeather(BotUser botUser) {
         this.botUser = botUser;
         return executeGetRequest(WeatherResponse.class, getUrlCurrentWeather());
+    }
+
+    public WeatherResponse getForecast(BotUser botUser, int days) {
+        this.botUser = botUser;
+        return executeGetRequest(WeatherResponse.class, getUrlForecast(days));
     }
 
     public Location[] getCurrentSearchLocation(double latitude, double longitude) {

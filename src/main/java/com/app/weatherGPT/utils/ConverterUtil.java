@@ -43,14 +43,29 @@ public class ConverterUtil {
     }
 
     public static <T extends Enum<T>> T convertToEnum(String value, Class<T> enumClass) {
+
         if (value == null || value.isEmpty()) {
             return null;
         }
+
+        String enumText = value
+                .toUpperCase()
+                .trim()
+                .replaceAll("\s", "_");
+
         try {
-            return Enum.valueOf(enumClass, value.toUpperCase());
+            return Enum.valueOf(enumClass, enumText);
         } catch (IllegalArgumentException e) {
-            log.error("Invalid enum value: {}", value);
+            log.error("An error occurred while retrieving the value {} from the enumeration {}.",
+                    enumClass.getName(),
+                    value);
+            log.error(e.getMessage());
             return null;
         }
+    }
+
+    public static <T extends Enum<T>> String convertToDescEnum(String value, Class<T> enumClass) {
+        T data = convertToEnum(value, enumClass);
+        return data == null ? "--" : data.toString();
     }
 }

@@ -34,7 +34,7 @@ public class CurrentWeatherCommand implements IBotCommand {
     @Override
     public void processMessage(AbsSender absSender, Message message, String[] arguments) {
         BotUser botUser = botUserServices.getUser(message.getFrom());
-        String text = weatherService.getDescriptorCurrentWeather(botUser);
+        String text = weatherService.getDescCurrentWeather(botUser);
         senderServices.sendBotMessage((WeatherBot) absSender, text, message.getChatId());
     }
 }

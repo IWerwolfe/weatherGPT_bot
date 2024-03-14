@@ -3,11 +3,9 @@ package com.app.weatherGPT.dto;    /*
  */
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 
-@Getter
 @AllArgsConstructor
-public enum Gender {
+public enum Gender implements EnumDesc {
 
     MALE("Мужчина"),
     FEMALE("Женщина");
@@ -17,5 +15,10 @@ public enum Gender {
     @Override
     public String toString() {
         return getLabel();
+    }
+
+    @Override
+    public String getLabel() {
+        return this.label;
     }
 }
