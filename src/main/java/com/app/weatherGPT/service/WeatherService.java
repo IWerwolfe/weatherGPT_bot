@@ -77,6 +77,7 @@ public class WeatherService {
         String avgTemp = String.valueOf(day.getAvgTempC());
 
         String astroDesc = toTextDescAstro(astro);
+        String precipitation = toTextDescPrecipitation(day);
 
         String description = condition.getText().toLowerCase();
         String wind = toTextDescWind(day.getMaxWindKph());
@@ -89,6 +90,7 @@ public class WeatherService {
                 
                 %s
                 температура от %s до %s °C
+                %s
                 %s
                 %s
                                 
@@ -104,6 +106,7 @@ public class WeatherService {
                 maxTemp,
                 description,
                 wind,
+                precipitation,
                 humidity,
                 uv,
                 airQ,
@@ -143,12 +146,78 @@ public class WeatherService {
         String moon = ConverterUtil.convertToDescEnum(astro.getMoonPhase(), LunarPhase.class);
 
         String pattern = """                
-                Рассвет: %s
-                Закат: %s
+                Рассвет %s
+                Закат %s
                 %s
                 """;
 
         return String.format(pattern, sunrise, sunset, moon);
+    }
+
+    private String toTextDescPrecipitation(Day day) {
+
+        StringBuilder builder = new StringBuilder();
+
+        if (day.getWillItRain() == 1) {
+
+            builder
+                    .append(variablePrecipitation(day.getChanceOfRain()))
+                    .append(" ")
+                    .append(variableRain(day.getTotalPrecipMm()));
+            return builder.toString();
+        }
+
+        if (day.getWillItSnow() == 1) {
+
+            builder
+                    .append(variablePrecipitation(day.getChanceOfSnow()))
+                    .append(" ")
+                    .append(variableSnow(day.getTotalPrecipMm()));
+            return builder.toString();
+            }
+
+        return builder
+                .append("Без осадков")
+                .toString();
+    }
+
+    private String variableSnow(double totalPrecipMm) {
+
+        if (totalPrecipMm <= 3) {
+            return "слабый снег";
+        }
+        if (totalPrecipMm <= 6) {
+            return "снегопад";
+        }
+        if (totalPrecipMm <= 19) {
+            return "сильный снегопад";
+        }
+        return "очень сильный снегопад";
+    }
+
+    private String variableRain(double totalPrecipMm) {
+
+        if (totalPrecipMm <= 3) {
+            return "легкий дождь";
+        }
+        if (totalPrecipMm <= 14) {
+            return "дождь";
+        }
+        if (totalPrecipMm <= 49) {
+            return "сильный дождь";
+        }
+        return "ливень";
+    }
+
+    private String variablePrecipitation(int percent) {
+
+        if (percent < 50) {
+            return "Возможен";
+        }
+        if (percent < 75) {
+            return "Вероятно будет";
+        }
+        return "Будет";
     }
 
     private String toTextDescUVIndex(double uvIndex) {

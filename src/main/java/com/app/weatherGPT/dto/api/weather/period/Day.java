@@ -54,6 +54,7 @@ public class Day {
     private int avgHumidity;
 
     private Condition condition;
+
     private double uv;
 
     @JsonProperty("daily_will_it_rain")
