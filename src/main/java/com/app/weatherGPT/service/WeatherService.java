@@ -255,6 +255,7 @@ public class WeatherService {
 
 
     private String toTextDescHumidity(int humidity) {
+
         if (humidity <= 30) {
             return Humidity.LOW.getLabel();
         }

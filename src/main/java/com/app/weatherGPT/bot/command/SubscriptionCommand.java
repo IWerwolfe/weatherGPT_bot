@@ -10,16 +10,16 @@ import org.telegram.telegrambots.meta.bots.AbsSender;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class SubscribeDayCommand implements IBotCommand {
+public class SubscriptionCommand implements IBotCommand {
 
     @Override
     public String getCommandIdentifier() {
-        return "subscribe_day";
+        return "subscription";
     }
 
     @Override
     public String getDescription() {
-        return "Подписаться на ежедневную рассылку";
+        return "Подписаться на рассылку прогноза погоды";
     }
 
     @Override

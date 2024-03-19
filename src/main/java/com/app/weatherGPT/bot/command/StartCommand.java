@@ -64,8 +64,5 @@ public class StartCommand implements IBotCommand {
         }
 
         senderServices.sendBotMessage((WeatherBot) absSender, text, keyboard, message.getChatId());
-
-        String desc = weatherService.getDescForecast(botUserServices.getUser(message.getFrom()), 3);
-        senderServices.sendBotMessage((WeatherBot) absSender, desc, message.getChatId());
     }
 }
