@@ -1,5 +1,6 @@
 package com.app.weatherGPT.service;
 
+import com.app.weatherGPT.dto.Frequency;
 import com.app.weatherGPT.model.location.City;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +11,10 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
+import java.lang.reflect.Field;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 
 @Slf4j
@@ -22,6 +26,7 @@ public class ButtonServices {
 
     private static final KeyboardButton EXIT = new KeyboardButton("Отмена");
     private static final KeyboardButton LOCATION = new KeyboardButton("Мое местоположение");
+    private final String timeFormat = "%02d:%02d";
 
     static {
         LOCATION.setRequestLocation(true);
@@ -36,8 +41,45 @@ public class ButtonServices {
                 continue;
             }
             String command = "city%" + city.getId();
-            buttonList.add(getInlineKeyboardButton(city.getName(), command));
+            buttonList.add(getInlineKeyboardButtonOfRow(city.getName(), command));
         }
+        return createInlineKeyboardMarkup(buttonList);
+    }
+
+    public <T extends Enum<T>> InlineKeyboardMarkup getInlineEnumKeyboard(Class<T> enumClass, String commandName) {
+
+        List<List<InlineKeyboardButton>> buttonList = new ArrayList<>();
+        EnumSet<T> enumSet = EnumSet.allOf(enumClass);
+
+        for (T field : enumSet) {
+            String command = commandName + "%" + field.name();
+            buttonList.add(getInlineKeyboardButtonOfRow(field.toString(), command));
+        }
+        return createInlineKeyboardMarkup(buttonList);
+    }
+
+
+    public InlineKeyboardMarkup getInlineTime() {
+
+        List<List<InlineKeyboardButton>> buttonList = new ArrayList<>();
+        List<InlineKeyboardButton> row = new ArrayList<>();
+
+        for (int i = 0; i < 24; i++) {
+
+            if (i%6 == 0) {
+                buttonList.add(row);
+                row = new ArrayList<>();
+            }
+
+            String time = String.format(timeFormat, i, 0);
+            String command = "time%" + time;
+            row.add(getInlineKeyboardButton(time, command));
+        }
+
+        if (row.size() > 0) {
+            buttonList.add(row);
+        }
+
         return createInlineKeyboardMarkup(buttonList);
     }
 
@@ -55,7 +97,10 @@ public class ButtonServices {
 
     private String convertDescription(String code) {
         String REGEX = "[^0-9a-zA-Zа-яА-ЯёЁ\\-.,=_*+&:#№@!/(){}\\[\\]]+";
-        return code.replaceAll(REGEX, " ").replaceAll("\s{2,}", " ").trim();
+        return code
+                .replaceAll(REGEX, " ")
+                .replaceAll("\s{2,}", " ")
+                .trim();
     }
 
     private ReplyKeyboardMarkup createReplyKeyboardMarkup(KeyboardButton button, boolean oneTimeKeyboard) {
@@ -76,10 +121,14 @@ public class ButtonServices {
         return createReplyKeyboardMarkup(rows, true);
     }
 
-    private List<InlineKeyboardButton> getInlineKeyboardButton(String label, String command) {
+    private InlineKeyboardButton getInlineKeyboardButton(String label, String command) {
         InlineKeyboardButton taskButton = new InlineKeyboardButton(label);
         taskButton.setCallbackData(command);
-        return List.of(taskButton);
+        return taskButton;
+    }
+
+    private List<InlineKeyboardButton> getInlineKeyboardButtonOfRow(String label, String command) {
+        return List.of(getInlineKeyboardButton(label, command));
     }
 
     private InlineKeyboardMarkup createInlineKeyboardMarkup(List<List<InlineKeyboardButton>> rows) {

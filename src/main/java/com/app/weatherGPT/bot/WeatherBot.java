@@ -1,5 +1,6 @@
 package com.app.weatherGPT.bot;
 
+import com.app.weatherGPT.bot.command.SubscriptionCommand;
 import com.app.weatherGPT.config.Telegram;
 import com.app.weatherGPT.model.BotUser;
 import com.app.weatherGPT.model.location.City;
@@ -32,6 +33,8 @@ public class WeatherBot extends TelegramLongPollingCommandBot {
     private final LocationServices locationServices;
     private final ButtonServices buttonServices;
 
+    private final SubscriptionCommand subscriptionCommand;
+
     private BotUser botUser;
 
     public WeatherBot(
@@ -42,7 +45,7 @@ public class WeatherBot extends TelegramLongPollingCommandBot {
             WeatherService weatherService,
             LocationServices locationServices,
             ButtonServices buttonServices,
-            CityRepository cityRepository) {
+            CityRepository cityRepository, SubscriptionCommand subscriptionCommand) {
 
         super(telegram.getBot().getToken());
 
@@ -53,6 +56,7 @@ public class WeatherBot extends TelegramLongPollingCommandBot {
         this.weatherService = weatherService;
         this.locationServices = locationServices;
         this.buttonServices = buttonServices;
+        this.subscriptionCommand = subscriptionCommand;
 
         commandList.forEach(this::register);
         this.cityRepository = cityRepository;
@@ -114,6 +118,8 @@ public class WeatherBot extends TelegramLongPollingCommandBot {
 
         switch (param[0]) {
             case "city" -> setLocationByCity(query, param[1]);
+            case "time" -> subscriptionCommand.handlerCommandTime(this, query.getMessage(), param[1]);
+            case "frequency" -> subscriptionCommand.handlerCommandFrequency(this, query.getMessage(), param[1]);
             default -> {
                 text = "Неизвестная команда";
                 senderServices.sendBotEditMessage(this, text, query.getMessage().getChatId(), query.getMessage().getMessageId());

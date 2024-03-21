@@ -6,11 +6,16 @@ import com.app.weatherGPT.dto.Frequency;
 import com.app.weatherGPT.model.location.City;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.TimeZone;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "subscriptions")
 @NoArgsConstructor
@@ -28,5 +33,6 @@ public class Subscription {
     @Enumerated(EnumType.STRING)
     private Frequency frequency;
     private LocalDateTime lastSend;
+    private LocalTime localTime;
 
 }

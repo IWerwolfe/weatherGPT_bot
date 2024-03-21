@@ -15,6 +15,8 @@ import org.telegram.telegrambots.meta.api.objects.User;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -52,6 +54,9 @@ public class BotUser {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "last_activity")
     private LastActivity lastActivity;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "last_activity")
+    private List<UserCommandCache> commandCaches;
 
     public BotUser() {
         this.isDeleted = false;
@@ -85,5 +90,13 @@ public class BotUser {
         }
 
         return location.isFilled();
+    }
+
+    public void addCommandCache(UserCommandCache commandCache) {
+
+        if (commandCache == null) {
+            this.commandCaches = new ArrayList<>();
+        }
+        this.commandCaches.add(commandCache);
     }
 }

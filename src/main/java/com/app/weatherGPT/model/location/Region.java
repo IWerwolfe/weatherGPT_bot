@@ -2,9 +2,12 @@ package com.app.weatherGPT.model.location;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "regions")
 @NoArgsConstructor

@@ -13,10 +13,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.time.ZoneId;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -82,6 +80,7 @@ public class LocationServices {
 
         Region region = convertToRegion(location);
         City city = new City(location.getName(), region);
+        city.setZoneId(ZoneId.of(location.getTzId()));
         return cityRepository.save(city);
     }
 

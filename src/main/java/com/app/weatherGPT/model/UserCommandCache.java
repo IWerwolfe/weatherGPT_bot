@@ -19,5 +19,6 @@ public class UserCommandCache {
     @JoinColumn(name = "user_id")
     private BotUser user;
     private String command;
-    private Byte data;
+    private String subCommand;
+    private Byte[] data;
 }
