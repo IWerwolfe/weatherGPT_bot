@@ -1,9 +1,7 @@
 package com.app.weatherGPT.service;
 
 import com.app.weatherGPT.model.BotUser;
-import com.app.weatherGPT.model.Subscription;
 import com.app.weatherGPT.model.UserCommandCache;
-import com.app.weatherGPT.repositories.SubscriptionRepository;
 import com.app.weatherGPT.repositories.UserCommandCacheRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,9 +9,8 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.User;
 
 import java.io.*;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -23,7 +20,7 @@ public class CommandCacheServices {
     private final UserCommandCacheRepository userCommandCacheRepository;
     private final BotUserServices botUserServices;
 
-    public <T extends Objects> void addCommandCache(User user, String command, String subcommand, T data) {
+    public <T> void addCommandCache(User user, String command, String subcommand, T data) {
 
         BotUser botUser = botUserServices.getUser(user);
         Byte[] array;
@@ -52,6 +49,15 @@ public class CommandCacheServices {
         }
     }
 
+    public Byte[] getCommandCache(User user, String time) {
+
+        BotUser botUser = botUserServices.getUser(user);
+        Optional<UserCommandCache> optional = userCommandCacheRepository.findByUserAndSubCommandIgnoreCase(botUser, time);
+
+        return optional.map(UserCommandCache::getData).orElse(null);
+
+    }
+
     public byte[] serializeObject(Object obj) throws IOException {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(bos);
@@ -77,9 +83,24 @@ public class CommandCacheServices {
     }
 
 
-    public Object deserializeObject(byte[] bytes) throws IOException, ClassNotFoundException {
+    public <T> T deserializeObject(byte[] bytes) throws IOException, ClassNotFoundException {
         ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
         ObjectInputStream ois = new ObjectInputStream(bis);
-        return ois.readObject();
+        return (T) ois.readObject();
+    }
+
+    public <T> T deserializeObject(Byte[] bytes) throws IOException, ClassNotFoundException {
+
+        if (bytes == null) {
+            return null;
+        }
+
+        byte[] bos1 = new byte[bytes.length];
+
+        for (int i = 0; i < bytes.length; i++) {
+            bos1[i] = bytes[i];
+        }
+
+        return (T) deserializeObject(bos1);
     }
 }

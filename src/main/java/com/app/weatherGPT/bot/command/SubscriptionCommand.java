@@ -17,7 +17,11 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.time.LocalTime;
+import java.time.ZoneId;
 
 @Service
 @Slf4j
@@ -59,8 +63,34 @@ public class SubscriptionCommand implements IBotCommand {
 
     public void handlerCommandFrequency(AbsSender absSender, Message message, String arguments) {
 
+        Byte[] data = commandCacheServices.getCommandCache(message.getFrom(), "time");
+
+        if (data == null) {
+            handlerErrors((WeatherBot) absSender, message);
+            return;
+        }
+
+        try {
+            String time = commandCacheServices.deserializeObject(data);
+            LocalTime localTime = LocalTime.ofInstant(Instant.from(LocalTime.parse(time)), ZoneId.of("Europe/London"));
+
+        } catch (IOException | ClassNotFoundException e) {
+            handlerErrors((WeatherBot) absSender, message);
+        }
+
+
         String text = "Как часто отправлять вам прогноз погоды  ?";
         InlineKeyboardMarkup keyboard = buttonServices.getInlineEnumKeyboard(Frequency.class, "frequency");
         senderServices.sendBotEditMessage((WeatherBot) absSender, text, keyboard, message.getChatId(), message.getMessageId());
+    }
+
+    private void handlerErrors(WeatherBot absSender, Message message) {
+
+        String text = "Произошла ошибка при обработке команды, попробуйте пожалуйста еще раз";
+        senderServices.sendBotEditMessage(absSender, text, message.getChatId(), message.getMessageId());
+
+        log.error("-- User {} command {} was not executed, cache data for Time was not retrieved",
+                message.getFrom().getId(),
+                getCommandIdentifier());
     }
 }
